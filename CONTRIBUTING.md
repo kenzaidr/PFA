@@ -1,59 +1,74 @@
-## 📌 Conventions de gestion des tâches
+# 📌 Conventions de gestion des tâches
 
-### 🎯 Organisation des tâches
+## 🎯 Organisation des tâches
 
 * Les fonctionnalités sont définies sous forme de **User Stories (US)**
-* Chaque US est découpée en **sub-issues (tâches techniques)**
+* Chaque User Story est découpée en **sub-issues (tâches techniques)**
 
 ---
 
-### 🗂️ Structure GitHub
+## 🗂️ Structure GitHub
 
-* **Roadmap** : contient uniquement les User Stories
-* **Kanban** : contient toutes les tâches détaillées
-
----
-
-### 🔄 Workflow des tâches
-
-* Backlog → To Do → In Progress → Done
-* Une tâche doit être assignée avant d’être commencée
+* **Roadmap** : contient uniquement les User Stories (vision globale)
+* **Kanban** : contient toutes les tâches détaillées (exécution)
 
 ---
 
-### 🏷️ Convention de nommage
+## 🔄 Workflow des tâches
 
-* US : `US-XXX – Nom de la fonctionnalité`
-* TEAM ITEM : `TEAM ITEM – Description`
-* Sub-issues : verbe à l’infinitif (ex: Créer API login)
-
----
-
-### 🧩 Labels utilisés
-
-* `M:` Module (Auth, AI, Recruiter…)
-* `T:` Type (Frontend, Backend, Feature, Security…)
-* `P:` Priorité (High, Medium, Low)
+* Cycle de vie : **Backlog → To Do → In Progress → Done**
+* Une tâche doit être **assignée avant d’être commencée**
+* Une tâche terminée doit être validée avant passage en *Done*
 
 ---
 
-### 🌿 Workflow Git
+## 🏷️ Convention de nommage
 
-* main → stable
-* dev → intégration
-* feature/* → développement
-
----
-
-### 🔒 Bonnes pratiques
-
-* Pas de push direct sur main
-* Pull Request obligatoire
-* Code review recommandée
+* **User Story** : `US-XXX – Nom de la fonctionnalité`
+* **Team Item** : `TEAM ITEM – Description`
+* **Sub-issues** : verbe à l’infinitif
+  *Exemple : Créer API login, Implémenter validation formulaire*
 
 ---
 
-### 📅 Organisation Agile
+## 🧩 Labels utilisés
 
-* Travail en sprints
-* Suivi via GitHub Projects (Roadmap + Kanban)
+* `M:` Module → Auth, AI, Recruiter…
+* `T:` Type → Frontend, Backend, Feature, Security…
+* `P:` Priorité → High, Medium, Low
+
+---
+
+## 🌿 Workflow Git
+
+* `main` → branche stable (production)
+* `dev` → branche d’intégration
+* `feature/*` → développement des fonctionnalités
+
+---
+
+## 🔄 Workflow Pull Request
+
+1. Créer une branche `feature/*`
+2. Développer la fonctionnalité
+3. Push la branche
+4. Créer une Pull Request vers `dev`
+5. Validation (review + tests)
+6. Merge dans `dev`
+7. Une fois stable → Pull Request `dev → main`
+
+---
+
+## 🔒 Bonnes pratiques
+
+* ❌ Pas de push direct sur `main`
+* ✅ Pull Request obligatoire
+* ✅ Code review recommandée
+* ✅ Messages de commit explicites
+
+---
+
+## 📅 Organisation Agile
+
+* Développement structuré en **sprints**
+* Suivi via **GitHub Projects (Roadmap + Kanban)**
