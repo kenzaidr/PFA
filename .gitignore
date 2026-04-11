@@ -10,9 +10,26 @@ application-local.yml
 
 # ===== REACT =====
 node_modules/
-frontend/build/
 dist/
+build/
+
+# Env
 .env*
+.env.local
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Vite
+frontend/dist/
 
 # ===== FASTAPI =====
 __pycache__/
