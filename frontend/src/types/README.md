@@ -1,4 +1,5 @@
-# Types Directory
+# Frontend Types
 
-This directory is intended for TypeScript definition files (`.d.ts` or general `models.ts`).
-Use this to enforce type safety across your startup's application.
+Shared TypeScript types and interfaces for the frontend.
+
+Store app-wide type definitions here.
