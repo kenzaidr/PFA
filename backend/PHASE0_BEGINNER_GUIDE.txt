@@ -160,3 +160,63 @@ After this is done, start Phase 1:
 2. Add validation annotations.
 3. Implement auth flow (register/login).
 4. Add first real business endpoint.
+
+## Phase 1 Starter Plan (recommended order)
+
+Use this order to move from skeleton to real backend features.
+
+### Step 1: Finalize domain relationships
+
+Focus on JPA relationships and ownership consistency.
+
+1. Confirm relation directions (`@OneToOne`, `@ManyToOne`, `@OneToMany`) and owning sides.
+2. Add `mappedBy` where needed for bidirectional links.
+3. Add cascade/fetch only where needed; keep defaults simple.
+4. Rebuild after each small batch:
+
+```powershell
+mvn -q clean compile
+```
+
+### Step 2: Add validation rules
+
+Put bean validation on input DTOs first.
+
+1. Add `@NotBlank`, `@Email`, `@Size`, etc. on request DTO fields.
+2. Use `@Valid` in controller methods.
+3. Extend `GlobalExceptionHandler` to return field-level errors for validation failures.
+4. Compile and test invalid input payloads.
+
+### Step 3: Build authentication flow
+
+Implement real register/login behavior.
+
+1. Create `AuthService` interface + implementation.
+2. Implement `JwtServiceImpl` from current `JwtService` interface.
+3. Add password hashing with `PasswordEncoder`.
+4. Add endpoints:
+	- `POST /api/v1/auth/register`
+	- `POST /api/v1/auth/login`
+5. Return DTOs only (never entity objects directly).
+
+### Step 4: Add first business feature
+
+Start with one simple business slice, for example job offers.
+
+1. Add service methods and DTOs for creating/listing offers.
+2. Keep controller thin: controller -> service -> repository.
+3. Add one pagination endpoint using `PageResponse<T>`.
+4. Test with sample data.
+
+### Step 5: Add tests before scaling
+
+1. Add controller/service tests for auth success/failure.
+2. Add at least one test for the first business endpoint.
+3. Keep test data minimal and deterministic.
+
+### Phase 1 done checklist
+
+1. Register/login works with hashed passwords and JWT.
+2. Validation errors return a consistent `ApiError` structure.
+3. At least one real business endpoint is functional.
+4. Build and tests pass.
