@@ -35,7 +35,7 @@ public class JobOffer extends BaseEntity {
     @Column(name = "deadline")
     private Instant deadline;
 
-    @Column(columnDefinition = "vector(1536)")
+    @Column(columnDefinition = "TEXT")
     private String embedding;
 
     @Column(length = 20)

@@ -2,6 +2,7 @@ package com.pfa.backend.infrastructure.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -19,12 +20,16 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .cors(Customizer.withDefaults())
             .authorizeHttpRequests(auth -> auth
+                .requestMatchers(HttpMethod.POST, "/api/v1/auth/register", "/api/v1/auth/register/").permitAll()
                 .requestMatchers(
                     "/api/health",
                     "/api/v1/auth/ping",
+                    "/api/v1/auth/register",
+                    "/api/v1/auth/register/",
                     "/api/v1/students/ping",
                     "/api/v1/recruiters/ping",
-                    "/api/v1/admin/ping"
+                    "/api/v1/admin/ping",
+                    "/error"
                 ).permitAll()
                 .anyRequest().authenticated()
             )

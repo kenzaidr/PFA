@@ -38,7 +38,7 @@ public class Client extends BaseEntity {
     @Column(name = "is_public")
     private Boolean isPublic = true;
 
-    @Column(columnDefinition = "vector(1536)")
+    @Column(columnDefinition = "TEXT")
     private String embedding;
 
     public User getUser() {
