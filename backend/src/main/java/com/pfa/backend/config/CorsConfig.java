@@ -14,7 +14,7 @@ public class CorsConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**") // Apply to all API endpoints
-                        .allowedOrigins("http://localhost:3000", "http://localhost:5173") // Allow your frontend URLs (React, Vite, etc.)
+                        .allowedOriginPatterns("http://localhost:*", "http://127.0.0.1:*") // Allow local frontend URLs across common dev ports
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // Allow these HTTP methods
                         .allowedHeaders("*") // Allow all headers
                         .allowCredentials(true); // Allow sending cookies/tokens

@@ -5,6 +5,7 @@ import { Link, useNavigate } from 'react-router-dom';
 
 import { Input } from '../components/ui/Input.jsx';
 import { authI18n as i18n } from '../utils/i18n.js';
+import { api } from '../services/api.js';
 
 export default function AuthPage() {
   const { lang } = useThemeLang();
@@ -13,11 +14,55 @@ export default function AuthPage() {
   
   const [isLogin, setIsLogin] = useState(true);
   const [role, setRole] = useState('student');
+  const [form, setForm] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    password: '',
+    companyName: '',
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState('');
+  const [fieldErrors, setFieldErrors] = useState({});
 
-  const handleSubmit = (e) => {
+  const updateField = (field) => (e) => {
+    setForm((prev) => ({ ...prev, [field]: e.target.value }));
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Students go through onboarding first, recruiters go home
-    navigate(role === 'student' ? '/onboarding' : '/');
+
+    setSubmitError('');
+    setFieldErrors({});
+
+    if (isLogin) {
+      // Login endpoint is not wired yet.
+      navigate(role === 'student' ? '/onboarding' : '/');
+      return;
+    }
+
+    if (role !== 'student') {
+      setSubmitError('Recruiter registration is not enabled yet. Please use Student for now.');
+      return;
+    }
+
+    try {
+      setIsSubmitting(true);
+      await api.register({
+        firstName: form.firstName,
+        lastName: form.lastName,
+        email: form.email,
+        password: form.password,
+        role: 'CLIENT',
+      });
+
+      navigate('/onboarding');
+    } catch (error) {
+      setSubmitError(error?.message || 'Registration failed. Please try again.');
+      setFieldErrors(error?.fieldErrors || {});
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -117,12 +162,21 @@ export default function AuthPage() {
           <form className="space-y-4" onSubmit={handleSubmit}>
             {!isLogin && (
               <div className="grid grid-cols-2 gap-4">
-                <Input label={t.firstName} type="text" placeholder="Kenza" />
-                <Input label={t.lastName} type="text" placeholder="Idrissi" />
+                <div>
+                  <Input label={t.firstName} type="text" placeholder="Kenza" value={form.firstName} onChange={updateField('firstName')} />
+                  {fieldErrors.firstName && <p className="text-xs text-red-500 mt-1">{fieldErrors.firstName}</p>}
+                </div>
+                <div>
+                  <Input label={t.lastName} type="text" placeholder="Idrissi" value={form.lastName} onChange={updateField('lastName')} />
+                  {fieldErrors.lastName && <p className="text-xs text-red-500 mt-1">{fieldErrors.lastName}</p>}
+                </div>
               </div>
             )}
             
-            <Input label={t.email} type="email" placeholder="nom@example.com" />
+            <div>
+              <Input label={t.email} type="email" placeholder="nom@example.com" value={form.email} onChange={updateField('email')} />
+              {fieldErrors.email && <p className="text-xs text-red-500 mt-1">{fieldErrors.email}</p>}
+            </div>
             
             <div className="space-y-1.5">
               <div className="flex justify-between items-center">
@@ -132,16 +186,23 @@ export default function AuthPage() {
               <input 
                 type="password" 
                 placeholder="••••••••" 
+                value={form.password}
+                onChange={updateField('password')}
                 className="w-full bg-white dark:bg-[#111111] border border-gray-300 dark:border-white/10 rounded-[10px] px-4 py-3 text-sm focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all text-gray-900 dark:text-white placeholder:text-gray-400"
               />
+              {fieldErrors.password && <p className="text-xs text-red-500 mt-1">{fieldErrors.password}</p>}
             </div>
 
             {!isLogin && role === 'recruiter' && (
-              <Input label={t.companyName} type="text" placeholder="Tech Startup SA" />
+              <Input label={t.companyName} type="text" placeholder="Tech Startup SA" value={form.companyName} onChange={updateField('companyName')} />
             )}
 
-            <button className={`w-full py-3.5 rounded-[10px] font-semibold text-sm transition-all mt-6 flex items-center justify-center gap-2 ${role === 'student' ? 'bg-indigo-600 hover:bg-indigo-700 text-white' : 'bg-emerald-600 hover:bg-emerald-700 text-white'}`}>
-              {isLogin ? t.signIn : t.signUp}
+            {submitError && (
+              <p className="text-sm text-red-500 font-medium">{submitError}</p>
+            )}
+
+            <button disabled={isSubmitting} className={`w-full py-3.5 rounded-[10px] font-semibold text-sm transition-all mt-6 flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed ${role === 'student' ? 'bg-indigo-600 hover:bg-indigo-700 text-white' : 'bg-emerald-600 hover:bg-emerald-700 text-white'}`}>
+              {isSubmitting ? 'Submitting...' : (isLogin ? t.signIn : t.signUp)}
               <ArrowRight className="w-4 h-4" />
             </button>
           </form>

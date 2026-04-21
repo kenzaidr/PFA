@@ -1,274 +1,250 @@
 # Frontend
 
-This frontend is currently UI-first (mock data in components). The backend connection layer is not implemented yet.
+Guide d'integration frontend <-> backend pour le projet PFA.
 
-This file documents:
-- what endpoint already exists in your backend
-- all endpoints the frontend needs to fully work
-- request and response shapes to implement
+Ce document liste:
+- Les endpoints backend deja disponibles.
+- Les endpoints a implementer pour connecter les ecrans frontend actuels.
+- Les payloads recommandes a partir du code frontend et des DTO backend existants.
 
-## 1) Current Backend Endpoint (Already Exists)
+## 1) Base URL Backend
 
-From backend scan, only this endpoint exists now:
+- Backend local: `http://localhost:8080`
+- Prefix principal API: `/api/v1`
+
+## 2) Endpoints backend existants (actuels)
+
+Ces endpoints existent deja dans les controllers backend:
 
 - `GET /api/health`
+- `GET /api/v1/auth/ping`
+- `GET /api/v1/students/ping`
+- `GET /api/v1/recruiters/ping`
+- `GET /api/v1/admin/ping`
 
-Expected response:
+## 3) Endpoints necessaires pour connecter le frontend
+
+### P0 - Authentification (priorite immediate, US-001)
+
+Utilise par: `src/pages/AuthPage.jsx`
+
+1. `POST /api/v1/auth/register`
+- But: creation compte etudiant/recruteur.
+- Body recommande:
 
 ```json
 {
-	"status": "UP",
-	"service": "pfa-backend",
-	"timestamp": "2026-04-19T12:00:00Z"
+	"firstName": "Kenza",
+	"lastName": "Idrissi",
+	"email": "kenza@example.com",
+	"password": "StrongPass123!",
+	"role": "CLIENT"
 }
 ```
 
-## 2) Frontend Endpoint Contract To Implement
-
-These endpoints are inferred from current frontend pages/components:
-- `src/pages/AuthPage.jsx`
-- `src/pages/OnboardingPage.jsx`
-- `src/pages/StudentDashboard.jsx`
-- `src/components/dashboard/*.jsx`
-- `src/components/layout/ProfilePanel.jsx`
-
-### A. Auth
-
-- `POST /api/auth/register/student`
-- `POST /api/auth/register/recruiter`
-- `POST /api/auth/login`
-- `POST /api/auth/logout`
-- `POST /api/auth/forgot-password`
-- `POST /api/auth/reset-password`
-- `GET /api/auth/me`
-
-Minimum payloads:
+2. `POST /api/v1/auth/login`
+- But: connexion utilisateur.
+- Body recommande:
 
 ```json
 {
-	"email": "string",
-	"password": "string"
+	"email": "kenza@example.com",
+	"password": "StrongPass123!"
 }
 ```
 
-For register student:
+- Reponse recommandee (basee sur `LoginResponse` + `UserSummaryResponse`):
 
 ```json
 {
-	"firstName": "string",
-	"lastName": "string",
-	"email": "string",
-	"password": "string",
-	"role": "student"
-}
-```
-
-For register recruiter:
-
-```json
-{
-	"firstName": "string",
-	"lastName": "string",
-	"email": "string",
-	"password": "string",
-	"companyName": "string",
-	"role": "recruiter"
-}
-```
-
-### B. Onboarding (CV + Questions)
-
-- `POST /api/onboarding/cv/analyze` (multipart/form-data)
-- `POST /api/onboarding/profile/build`
-- `GET /api/onboarding/status`
-
-`/api/onboarding/cv/analyze` request:
-- form-data field: `file`
-
-`/api/onboarding/cv/analyze` response:
-
-```json
-{
-	"name": "string",
-	"level": "string",
-	"skills": ["string"],
-	"education": "string",
-	"experience": "string",
-	"missing": ["string"],
-	"score": 0
-}
-```
-
-`/api/onboarding/profile/build` request:
-
-```json
-{
-	"answers": {
-		"specialty": "frontend|backend|fullstack|data",
-		"goal": "job_6m|job_1y|senior|freelance",
-		"availability": "5h|10h|20h|40h",
-		"weakness": "algo|sysdesign|english|soft",
-		"city": "casablanca|rabat|fes|remote"
+	"token": "jwt_token_here",
+	"user": {
+		"id": 1,
+		"email": "kenza@example.com",
+		"firstName": "Kenza",
+		"lastName": "Idrissi",
+		"role": "CLIENT"
 	}
 }
 ```
 
-### C. Dashboard Overview
+3. `GET /api/v1/auth/me`
+- But: recuperer utilisateur connecte (apres refresh page).
 
-- `GET /api/dashboard/overview`
-- `GET /api/dashboard/stats`
-- `GET /api/dashboard/activities`
-- `GET /api/dashboard/notifications`
+4. `POST /api/v1/auth/logout` (optionnel)
+- But: invalider token cote backend (si blacklist) ou gerer logout cote client.
 
-`/api/dashboard/stats` response shape:
+### P1 - Onboarding et profil client (etudiant)
 
-```json
-{
-	"globalScore": 87,
-	"matchedJobs": 23,
-	"activeStreakDays": 14,
-	"nationalRank": 342,
-	"deltas": {
-		"globalScore": "+5",
-		"matchedJobs": "+8",
-		"activeStreakDays": "record",
-		"nationalRank": "+58"
-	}
-}
-```
+Utilise par: `src/pages/OnboardingPage.jsx`, `src/components/dashboard/SettingsTab.jsx`
 
-### D. Skills
+1. `POST /api/v1/clients/onboarding`
+- But: sauvegarder reponses onboarding (specialty, goal, availability, weakness, city).
 
-- `GET /api/skills/radar`
-- `GET /api/skills`
-- `GET /api/badges`
+2. `POST /api/v1/clients/cv`
+- But: upload CV (multipart/form-data).
 
-`/api/skills/radar` response:
+3. `POST /api/v1/clients/cv/analyze`
+- But: lancer analyse IA du CV et retourner resume profil.
 
-```json
-[
-	{ "label": "React", "value": 92 },
-	{ "label": "Python", "value": 78 }
-]
-```
+4. `GET /api/v1/clients/profile`
+- But: charger profil settings/dashboard.
 
-### E. Market
+5. `PUT /api/v1/clients/profile`
+- But: modifier profil (firstName, lastName, phone, bio, liens, etc.).
 
-- `GET /api/market/salaries`
-- `GET /api/market/companies/top`
-- `GET /api/market/insights`
+6. `PUT /api/v1/clients/privacy`
+- But: maj preferences confidentialite.
 
-### F. Jobs
+7. `DELETE /api/v1/clients/account`
+- But: suppression compte (zone danger).
 
-- `GET /api/jobs`
-- `GET /api/jobs/recommended`
-- `POST /api/jobs/{jobId}/apply`
-- `GET /api/jobs/{jobId}`
+### P1 - Dashboard et analytics
 
-Recommended query params for `GET /api/jobs`:
-- `q`
-- `filter=all|top|remote|senior`
-- `location`
-- `page`
-- `size`
+Utilise par: `src/pages/StudentDashboard.jsx`, `src/components/dashboard/OverviewTab.jsx`, `src/components/dashboard/SkillsTab.jsx`
 
-Job response item:
+1. `GET /api/v1/dashboard/overview`
+- But: stats globales (score, matched jobs, streak, rank).
 
-```json
-{
-	"id": "string",
-	"title": "string",
-	"company": "string",
-	"match": 0,
-	"location": "string",
-	"salary": "string",
-	"tags": ["string"]
-}
-```
+2. `GET /api/v1/clients/skills/radar`
+- But: donnees radar chart.
 
-### G. Roadmap
+3. `GET /api/v1/clients/skills`
+- But: liste des skills detaillees.
 
-- `GET /api/roadmap`
-- `GET /api/roadmap/tracks`
-- `PATCH /api/roadmap/tracks/{trackId}/activate`
-- `PATCH /api/roadmap/modules/{moduleId}/start`
-- `PATCH /api/roadmap/modules/{moduleId}/complete`
+4. `GET /api/v1/clients/badges`
+- But: badges/certifications.
 
-### H. AI Coach
+5. `GET /api/v1/clients/activities`
+- But: activite recente.
 
-- `GET /api/coach/prompts`
-- `GET /api/coach/messages?sessionId={id}`
-- `POST /api/coach/messages`
+### P1 - Jobs et market
 
-`/api/coach/messages` request:
+Utilise par: `src/components/dashboard/JobsTab.jsx`, `src/components/dashboard/MarketTab.jsx`
 
-```json
-{
-	"sessionId": "string",
-	"message": "string",
-	"lang": "fr|en"
-}
-```
+1. `GET /api/v1/jobs?filter=&search=&page=&size=`
+- But: recuperer offres jobs (filtrage, pagination).
 
-`/api/coach/messages` response:
+2. `GET /api/v1/jobs/recommended`
+- But: offres match par profil.
 
-```json
-{
-	"reply": "string",
-	"sessionId": "string"
-}
-```
+3. `POST /api/v1/jobs/{jobId}/apply`
+- But: postuler.
 
-### I. Settings and Profile
+4. `GET /api/v1/market/salary-trends`
+- But: tendances salaires par skill.
 
-- `GET /api/users/me/profile`
-- `PUT /api/users/me/profile`
-- `PUT /api/users/me/links`
-- `PUT /api/users/me/preferences`
-- `PUT /api/users/me/privacy`
-- `PUT /api/users/me/notifications`
-- `PUT /api/users/me/password`
-- `POST /api/users/me/2fa/enable`
-- `POST /api/users/me/2fa/verify`
-- `GET /api/users/me/sessions`
-- `DELETE /api/users/me/sessions/{sessionId}`
-- `GET /api/users/me/export`
-- `DELETE /api/users/me`
+5. `GET /api/v1/market/top-companies`
+- But: top recruteurs actifs.
 
-### J. Notifications
+### P1 - Roadmap
 
-- `GET /api/notifications`
-- `PATCH /api/notifications/{id}/read`
-- `PATCH /api/notifications/read-all`
+Utilise par: `src/components/dashboard/RoadmapTab.jsx`
 
-## 3) Frontend Integration Rules
+1. `GET /api/v1/clients/roadmap`
+- But: recuperer roadmap active + progression.
 
-### Add env variable
+2. `GET /api/v1/clients/roadmap/modules`
+- But: liste modules + statut (done/current/locked).
 
-Create `.env` in `frontend/`:
+3. `POST /api/v1/clients/roadmap/modules/{moduleId}/start`
+- But: demarrer module.
 
-```env
-VITE_API_BASE_URL=http://localhost:8080
-```
+4. `POST /api/v1/clients/roadmap/modules/{moduleId}/complete`
+- But: terminer module et mettre a jour progression.
 
-### API base in frontend
+### P1 - AI Coach
 
-Use `src/services/api.js` as the central client.
+Utilise par: `src/components/dashboard/CoachTab.jsx`
 
-Suggested baseline:
+1. `POST /api/v1/coach/chat`
+- But: envoyer message au coach.
 
-```js
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080';
-```
+2. `GET /api/v1/coach/conversations`
+- But: historique conversations.
 
-Then call endpoints with:
+3. `GET /api/v1/coach/stats`
+- But: stats coaching (sessions, score, temps, skills ameliorees).
 
-```js
-fetch(`${API_BASE_URL}/api/...`)
-```
+### P2 - Notifications et securite compte
 
-## 4) Important Status
+Utilise par: `src/components/dashboard/SettingsTab.jsx`
 
-- Current frontend state: mostly static/mock values.
-- Current backend state: only `GET /api/health` is implemented.
-- To fully link frontend + backend, implement the contract above and then wire calls in `src/services/api.js` and page/tab components.
+1. `GET /api/v1/notifications`
+2. `PUT /api/v1/notifications/preferences`
+3. `GET /api/v1/auth/sessions`
+4. `DELETE /api/v1/auth/sessions/{sessionId}`
+5. `PUT /api/v1/auth/password`
+6. `POST /api/v1/auth/2fa/enable`
+7. `POST /api/v1/auth/2fa/verify`
+
+## 4) Mapping ecran -> endpoint (resume rapide)
+
+- Auth (`/auth`):
+	- `POST /api/v1/auth/register`
+	- `POST /api/v1/auth/login`
+	- `GET /api/v1/auth/me`
+
+- Onboarding (`/onboarding`):
+	- `POST /api/v1/clients/cv`
+	- `POST /api/v1/clients/cv/analyze`
+	- `POST /api/v1/clients/onboarding`
+
+- Dashboard (`/dashboard`):
+	- `GET /api/v1/dashboard/overview`
+	- `GET /api/v1/clients/skills/radar`
+	- `GET /api/v1/jobs/recommended`
+	- `GET /api/v1/clients/activities`
+
+- Jobs tab:
+	- `GET /api/v1/jobs`
+	- `POST /api/v1/jobs/{jobId}/apply`
+
+- Market tab:
+	- `GET /api/v1/market/salary-trends`
+	- `GET /api/v1/market/top-companies`
+
+- Roadmap tab:
+	- `GET /api/v1/clients/roadmap`
+	- `GET /api/v1/clients/roadmap/modules`
+
+- Coach tab:
+	- `POST /api/v1/coach/chat`
+	- `GET /api/v1/coach/stats`
+
+- Settings tab:
+	- `GET /api/v1/clients/profile`
+	- `PUT /api/v1/clients/profile`
+	- `PUT /api/v1/notifications/preferences`
+	- `PUT /api/v1/auth/password`
+
+## 5) Important: mismatch a corriger cote backend
+
+En lisant le code backend actuel:
+- `Role` enum est: `ADMIN`, `RECRUITER`, `CLIENT`.
+
+Dans le frontend Auth, le role UX est `student`/`recruiter`.
+
+Donc, mapping recommande cote frontend:
+- `student` -> `CLIENT`
+- `recruiter` -> `RECRUITER`
+
+Et cote backend, verifier si vous voulez garder `CLIENT` ou revenir a `STUDENT` partout.
+
+## 6) Prochaine etape concrete (ce que tu dois faire maintenant)
+
+Pour l'image US-001 "Implementer inscription etudiant", commence par:
+
+1. Implementer `POST /api/v1/auth/register` dans `AuthController` + service.
+2. Ajouter validation DTO (`firstName`, `lastName`, `email`, `password`, `role`).
+3. Hash password (BCrypt deja configure dans `SecurityConfig`).
+4. Sauvegarder `User` (role `CLIENT` pour etudiant) + entite `Client` associee.
+5. Retourner payload `UserSummaryResponse` (ou `LoginResponse` si auto-login).
+
+## 7) Optionnel: structure API frontend conseillee
+
+Dans `src/services/api.js`, centraliser tous les appels (fetch/axios), avec:
+- `baseURL = http://localhost:8080`
+- ajout automatique header `Authorization: Bearer <token>`
+- gestion d'erreurs uniforme (401/403/500)
+
