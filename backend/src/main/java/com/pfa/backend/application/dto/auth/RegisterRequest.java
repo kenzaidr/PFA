@@ -30,17 +30,21 @@ public class RegisterRequest {
     )
     private String password;
 
+    @Size(max = 150, message = "Company name must be at most 150 characters")
+    private String companyName;
+
     @NotNull(message = "Role is required")
     private Role role;
 
     public RegisterRequest() {
     }
 
-    public RegisterRequest(String firstName, String lastName, String email, String password, Role role) {
+    public RegisterRequest(String firstName, String lastName, String email, String password, String companyName, Role role) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.password = password;
+        this.companyName = companyName;
         this.role = role;
     }
 
@@ -74,6 +78,14 @@ public class RegisterRequest {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getCompanyName() {
+        return companyName;
+    }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
     }
 
     public Role getRole() {

@@ -20,6 +20,8 @@ DB_USER=postgres
 DB_PASSWORD=Mouad123
 SERVER_PORT=8080
 SPRING_PROFILES_ACTIVE=dev
+APP_MAIL_FROM=
+APP_FRONTEND_BASE_URL=http://localhost:5173
 ```
 
 ## 1) Start PostgreSQL with Docker
@@ -69,6 +71,8 @@ The backend reads these variables:
 - `DB_PASSWORD` (required)
 - `SERVER_PORT` (default: `8080`)
 - `SPRING_PROFILES_ACTIVE` (recommended: `dev` locally)
+- `APP_MAIL_FROM` (optional: enables email delivery when SMTP is configured)
+- `APP_FRONTEND_BASE_URL` (optional: used in email links)
 
 ## 4) How to test endpoints
 
@@ -120,7 +124,9 @@ Expected behavior:
 
 Validation notes:
 
-- This endpoint is student-only. Send `role: "CLIENT"` (or `"STUDENT"`), and it is persisted as `STUDENT`.
+- This endpoint supports student/client and recruiter registration.
+- Send `role: "CLIENT"` (or `"STUDENT"`) for a student account, and `role: "RECRUITER"` for a recruiter account.
+- Recruiter registration also requires `companyName`.
 - Password must have at least 8 chars, with uppercase, lowercase, and digit
 - Email must be valid and unique
 
@@ -128,6 +134,89 @@ If validation fails, expected:
 
 - `400 Bad Request`
 - Response includes `fieldErrors`
+
+#### 4. Request password reset (POST)
+
+- Method: `POST`
+- URL: `http://localhost:8080/api/v1/auth/password-reset/request`
+- Headers:
+	- `Content-Type: application/json`
+- Body (raw JSON):
+
+```json
+{
+	"email": "kenza@example.com"
+}
+```
+
+Expected behavior:
+
+- `200 OK`
+- Response contains a generic success message
+- In development without SMTP, the response also returns a temporary `resetToken` and `expiresAt`
+- When SMTP is configured, the reset link is sent by email and `resetToken` is omitted
+
+#### 5. Request email verification (POST)
+
+- Method: `POST`
+- URL: `http://localhost:8080/api/v1/auth/email-verification/request`
+- Headers:
+	- `Content-Type: application/json`
+- Body (raw JSON):
+
+```json
+{
+	"email": "kenza@example.com"
+}
+```
+
+Expected behavior:
+
+- `200 OK`
+- Response contains a generic success message
+- In development without SMTP, the response also returns a temporary `verificationToken` and `expiresAt`
+- When SMTP is configured, the verification link is sent by email and `verificationToken` is omitted
+
+#### 6. Confirm email verification (POST)
+
+- Method: `POST`
+- URL: `http://localhost:8080/api/v1/auth/email-verification/confirm`
+- Headers:
+	- `Content-Type: application/json`
+- Body (raw JSON):
+
+```json
+{
+	"token": "verification-token-from-request"
+}
+```
+
+Expected behavior:
+
+- `200 OK`
+- The user account is marked verified and activated
+- The token becomes invalid after one use
+
+#### 7. Confirm password reset (POST)
+
+- Method: `POST`
+- URL: `http://localhost:8080/api/v1/auth/password-reset/confirm`
+- Headers:
+	- `Content-Type: application/json`
+- Body (raw JSON):
+
+```json
+{
+	"token": "reset-token-from-request",
+	"newPassword": "NewStrongPass123"
+}
+```
+
+Expected behavior:
+
+- `200 OK`
+- Password is updated and stored hashed
+- The reset token becomes invalid after one use
 
 ### B) Test with REST API tools (curl / VS Code REST Client)
 
@@ -141,6 +230,30 @@ curl -X GET http://localhost:8080/api/health
 curl -X POST http://localhost:8080/api/v1/auth/register ^
 	-H "Content-Type: application/json" ^
 	-d "{\"firstName\":\"Kenza\",\"lastName\":\"Idrissi\",\"email\":\"kenza@example.com\",\"password\":\"StrongPass123\",\"role\":\"CLIENT\"}"
+```
+
+```powershell
+curl -X POST http://localhost:8080/api/v1/auth/password-reset/request ^
+	-H "Content-Type: application/json" ^
+	-d "{\"email\":\"kenza@example.com\"}"
+```
+
+```powershell
+curl -X POST http://localhost:8080/api/v1/auth/email-verification/request ^
+	-H "Content-Type: application/json" ^
+	-d "{\"email\":\"kenza@example.com\"}"
+```
+
+```powershell
+curl -X POST http://localhost:8080/api/v1/auth/password-reset/confirm ^
+	-H "Content-Type: application/json" ^
+	-d "{\"token\":\"reset-token-from-request\",\"newPassword\":\"NewStrongPass123\"}"
+```
+
+```powershell
+curl -X POST http://localhost:8080/api/v1/auth/email-verification/confirm ^
+	-H "Content-Type: application/json" ^
+	-d "{\"token\":\"verification-token-from-request\"}"
 ```
 
 #### Option 2: VS Code REST Client extension

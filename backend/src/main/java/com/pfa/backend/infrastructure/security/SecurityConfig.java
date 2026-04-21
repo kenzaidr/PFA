@@ -20,12 +20,32 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .cors(Customizer.withDefaults())
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers(HttpMethod.POST, "/api/v1/auth/register", "/api/v1/auth/register/").permitAll()
+                .requestMatchers(
+                    HttpMethod.POST,
+                    "/api/v1/auth/register",
+                    "/api/v1/auth/register/",
+                    "/api/v1/auth/email-verification/request",
+                    "/api/v1/auth/email-verification/request/",
+                    "/api/v1/auth/email-verification/confirm",
+                    "/api/v1/auth/email-verification/confirm/",
+                    "/api/v1/auth/password-reset/request",
+                    "/api/v1/auth/password-reset/request/",
+                    "/api/v1/auth/password-reset/confirm",
+                    "/api/v1/auth/password-reset/confirm/"
+                ).permitAll()
                 .requestMatchers(
                     "/api/health",
                     "/api/v1/auth/ping",
                     "/api/v1/auth/register",
                     "/api/v1/auth/register/",
+                    "/api/v1/auth/email-verification/request",
+                    "/api/v1/auth/email-verification/request/",
+                    "/api/v1/auth/email-verification/confirm",
+                    "/api/v1/auth/email-verification/confirm/",
+                    "/api/v1/auth/password-reset/request",
+                    "/api/v1/auth/password-reset/request/",
+                    "/api/v1/auth/password-reset/confirm",
+                    "/api/v1/auth/password-reset/confirm/",
                     "/api/v1/students/ping",
                     "/api/v1/recruiters/ping",
                     "/api/v1/admin/ping",

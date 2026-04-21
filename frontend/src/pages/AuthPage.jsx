@@ -41,20 +41,21 @@ export default function AuthPage() {
       return;
     }
 
-    if (role !== 'student') {
-      setSubmitError('Recruiter registration is not enabled yet. Please use Student for now.');
-      return;
-    }
-
     try {
       setIsSubmitting(true);
-      await api.register({
-        firstName: form.firstName,
-        lastName: form.lastName,
-        email: form.email,
+      const payload = {
+        firstName: form.firstName.trim(),
+        lastName: form.lastName.trim(),
+        email: form.email.trim().toLowerCase(),
         password: form.password,
-        role: 'CLIENT',
-      });
+        role: role === 'student' ? 'CLIENT' : 'RECRUITER',
+      };
+
+      if (role === 'recruiter') {
+        payload.companyName = form.companyName.trim();
+      }
+
+      await api.register(payload);
 
       navigate('/onboarding');
     } catch (error) {

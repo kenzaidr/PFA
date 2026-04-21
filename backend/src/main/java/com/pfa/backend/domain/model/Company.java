@@ -2,6 +2,7 @@ package com.pfa.backend.domain.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
@@ -31,7 +32,7 @@ public class Company extends BaseEntity {
     @Column(name = "is_verified")
     private Boolean isVerified = false;
 
-    @Column(name = "created_at", nullable = false, insertable = false, updatable = false)
+    @Column(name = "created_at", nullable = false)
     private Instant createdAt;
 
     public User getUser() {
@@ -84,5 +85,12 @@ public class Company extends BaseEntity {
 
     public Instant getCreatedAt() {
         return createdAt;
+    }
+
+    @PrePersist
+    public void onCreate() {
+        if (createdAt == null) {
+            createdAt = Instant.now();
+        }
     }
 }
