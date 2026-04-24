@@ -202,8 +202,8 @@ export default function EsisaPlatform() {
             <button onClick={() => setDarkMode((prev) => !prev)} aria-label="Toggle dark mode" className="dark-mode-toggle">
               {darkMode ? <Sun size={16} /> : <Moon size={16} />}
             </button>
-            <button className="btn-book-call">Book Call</button>
-            <button className="btn-nav-demo">Request Demo</button>
+            <button className="btn-book-call">Login</button>
+            <button className="btn-nav-demo">Start now</button>
           </div>
         </div>
       </nav>
@@ -236,19 +236,6 @@ export default function EsisaPlatform() {
               <ArrowRight className="btn-explore-arrow" size={18} />
             </button>
             <button className="btn-vision">Our Vision</button>
-          </div>
-
-          <div className="hero-stats">
-            {[
-              { k: 'AI', v: 'CV Generation' },
-              { k: 'AI', v: 'Motivation Letters' },
-              { k: 'AI', v: 'CV Analysis Model' },
-            ].map((stat) => (
-              <div key={stat.v} className="stat-card">
-                <p className="stat-value">{stat.k}</p>
-                <p className="stat-label">{stat.v}</p>
-              </div>
-            ))}
           </div>
         </motion.div>
 
