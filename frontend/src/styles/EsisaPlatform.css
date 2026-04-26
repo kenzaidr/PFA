@@ -619,7 +619,7 @@
 .hero-title {
   font-family: var(--font-display);
   margin-top: 1.5rem;
-  font-size: 3rem;
+  font-size: 2.2rem;
   font-weight: 900;
   text-transform: uppercase;
   line-height: 0.94;
@@ -628,8 +628,8 @@
 [data-theme="dark"] .hero-title {
   color: #DCE7FF;
 }
-@media (min-width: 768px)  { .hero-title { font-size: 4.5rem; } }
-@media (min-width: 1024px) { .hero-title { font-size: 86px; } }
+@media (min-width: 768px)  { .hero-title { font-size: 3.2rem; } }
+@media (min-width: 1024px) { .hero-title { font-size: 64px; } }
 
 .hero-title-blue {
   display: block;
