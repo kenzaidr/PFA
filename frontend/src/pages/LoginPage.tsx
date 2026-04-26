@@ -189,7 +189,7 @@ export default function LoginPage() {
 
           <p className="login-footer-text">
             Don't have an account?{' '}
-            <a href="#" className="login-signup-link">Create one</a>
+            <Link to="/signup" className="login-signup-link">Create one</Link>
           </p>
         </motion.div>
 
