@@ -322,6 +322,11 @@
   }
 }
 
+/* When only one social button, go full-width */
+.login-social-btn:only-child {
+  grid-column: 1 / -1;
+}
+
 
 /* --------------------------------------------------
    DIVIDER
