@@ -1,0 +1,195 @@
+US-001 STEP-BY-STEP GUIDE
+Task: Implement student registration
+Project: PFA Backend
+
+==================================================
+0) GOAL OF THIS TASK
+==================================================
+Create a working registration flow so a student can sign up with:
+- firstName
+- lastName
+- email
+- password
+
+Expected behavior:
+1. User is created with role STUDENT.
+2. Password is hashed (not plain text).
+3. Duplicate email is rejected.
+4. Validation errors return clear API errors.
+5. API returns DTOs, not entity objects.
+
+==================================================
+1) PREPARE THE FILES YOU WILL TOUCH
+==================================================
+Main files (existing or to create):
+1. src/main/java/com/pfa/backend/application/dto/auth/RegisterRequest.java
+2. src/main/java/com/pfa/backend/application/dto/auth/UserSummaryResponse.java
+3. src/main/java/com/pfa/backend/infrastructure/adapter/in/auth/AuthController.java
+4. src/main/java/com/pfa/backend/infrastructure/persistence/UserRepository.java
+5. src/main/java/com/pfa/backend/domain/model/User.java
+6. src/main/java/com/pfa/backend/domain/model/StudentProfile.java
+7. src/main/java/com/pfa/backend/infrastructure/exception/GlobalExceptionHandler.java
+
+Create service layer files:
+8. src/main/java/com/pfa/backend/application/service/auth/AuthService.java
+9. src/main/java/com/pfa/backend/application/service/auth/AuthServiceImpl.java
+
+Optional helper files (recommended):
+10. src/main/java/com/pfa/backend/domain/exception/EmailAlreadyUsedException.java
+
+==================================================
+2) ADD REQUEST VALIDATION
+==================================================
+Edit RegisterRequest.java and add bean validation annotations:
+- firstName: @NotBlank, @Size(min=2, max=50)
+- lastName: @NotBlank, @Size(min=2, max=50)
+- email: @NotBlank, @Email
+- password: @NotBlank, @Size(min=8, max=100)
+
+Make sure validation imports are from jakarta.validation.constraints.*
+
+==================================================
+3) PREPARE PERSISTENCE CHECKS
+==================================================
+In UserRepository.java, ensure this method exists:
+- Optional<User> findByEmail(String email)
+
+This is needed to block duplicate registration.
+
+==================================================
+4) CREATE SERVICE CONTRACT
+==================================================
+Create AuthService.java with one method:
+- UserSummaryResponse register(RegisterRequest request)
+
+Purpose:
+- Controller calls this service only.
+- Service handles all registration logic.
+
+==================================================
+5) IMPLEMENT AUTH SERVICE LOGIC
+==================================================
+In AuthServiceImpl.java implement register flow:
+
+Step A: Check duplicate email
+- if userRepository.findByEmail(request.getEmail()).isPresent()
+- throw EmailAlreadyUsedException (or IllegalArgumentException)
+
+Step B: Build User entity
+- set firstName, lastName, email
+- set role = Role.STUDENT
+- set password = passwordEncoder.encode(request.getPassword())
+
+Step C: Save User
+- User savedUser = userRepository.save(user)
+
+Step D: Create StudentProfile
+- profile.setUser(savedUser)
+- save profile (create StudentProfileRepository if needed)
+
+Step E: Return DTO
+- map savedUser -> UserSummaryResponse
+
+Important:
+- Do NOT return User entity from service/controller.
+
+==================================================
+6) UPDATE CONTROLLER
+==================================================
+In AuthController.java add endpoint:
+- POST /api/v1/auth/register
+
+Method rules:
+1. Use @Valid on request body.
+2. Call authService.register(request).
+3. Return ResponseEntity<UserSummaryResponse> (201 Created recommended).
+
+Also keep /ping endpoint for quick checks.
+
+==================================================
+7) HANDLE ERRORS CLEANLY
+==================================================
+In GlobalExceptionHandler.java add handlers for:
+1. MethodArgumentNotValidException
+- Collect field errors into map: field -> message
+- Return ApiError with status 400
+
+2. EmailAlreadyUsedException (or IllegalArgumentException)
+- Return ApiError with status 409 (Conflict) or 400
+
+This keeps frontend responses consistent.
+
+==================================================
+8) SECURITY NOTES
+==================================================
+In SecurityConfig.java keep register endpoint public:
+- /api/v1/auth/register should be permitAll()
+
+Do not expose protected endpoints yet unless needed.
+
+==================================================
+9) TEST THE FLOW MANUALLY
+==================================================
+Build and run:
+1. mvn -q clean compile
+2. mvn spring-boot:run
+
+Sample request (Postman/curl):
+POST http://localhost:8080/api/v1/auth/register
+Content-Type: application/json
+
+{
+  "firstName": "Mouad",
+  "lastName": "Test",
+  "email": "mouad@test.com",
+  "password": "StrongPass123"
+}
+
+Expected:
+- HTTP 201
+- Response contains id/email/firstName/lastName/role
+- role = STUDENT
+
+Try duplicate email:
+- same request again
+- expected HTTP 409 (or 400) with ApiError format
+
+Try invalid email or short password:
+- expected HTTP 400 with fieldErrors details
+
+==================================================
+10) ADD AUTOMATED TESTS (MINIMUM)
+==================================================
+Create tests for:
+1. register_success
+- user saved, role STUDENT, password hashed
+
+2. register_duplicate_email
+- returns conflict/bad request and does not save duplicate
+
+3. register_validation_failure
+- invalid payload returns field errors
+
+==================================================
+11) DEFINITION OF DONE
+==================================================
+US-001 is done when:
+1. POST /api/v1/auth/register works.
+2. Password is hashed.
+3. Duplicate email is blocked.
+4. Validation errors are structured.
+5. Build passes: mvn -q clean compile
+6. Tests pass.
+
+==================================================
+12) SAFE IMPLEMENTATION ORDER (RECOMMENDED)
+==================================================
+1. RegisterRequest validation
+2. AuthService interface
+3. AuthServiceImpl logic
+4. AuthController register endpoint
+5. GlobalExceptionHandler validation + duplicate handlers
+6. SecurityConfig permit register endpoint
+7. Compile and run tests
+
+End of guide.

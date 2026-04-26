@@ -1,0 +1,62 @@
+# ===== SPRING BOOT =====
+target/
+*.log
+logs/
+/build/
+.mvn/
+.gradle/
+application-secret.properties
+application-local.yml
+
+# ===== REACT =====
+node_modules/
+dist/
+build/
+
+# Env
+.env*
+.env.local
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Vite
+frontend/dist/
+
+# ===== FASTAPI =====
+__pycache__/
+*.py[cod]
+venv/
+env/
+.venv/
+.pytest_cache/
+
+# ===== IA =====
+ia/models/*
+!ia/models/.gitkeep
+ia/data/
+*.pkl
+*.pt
+*.bin
+
+# ===== IDE =====
+.idea/
+.vscode/
+*.iml
+
+# ===== OS =====
+.DS_Store
+Thumbs.db
+
+# ===== SECRETS =====
+*.key
+*.pem
+secrets/

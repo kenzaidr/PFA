@@ -1,0 +1,222 @@
+# Phase 0 Beginner Guide (Java Backend)
+
+This guide is for a first-time backend student.
+Goal: finish Phase 0 foundations before real business features.
+
+## What you already did
+
+1. Java version is aligned to 25.
+2. Database env and profiles are configured.
+3. Package folders exist.
+
+Great start. Now we create the first class skeletons.
+
+## Final objective of this guide
+
+At the end, you should have:
+
+1. Global error format and global exception handler.
+2. Security and CORS base config.
+3. JWT service interface.
+4. Minimal auth DTOs + generic page DTO.
+5. Minimal domain entities and role enum.
+6. 3 repositories.
+7. 4 controllers with simple test endpoints.
+
+## Step 1: Create cross-cutting classes
+
+Create these files first.
+
+1. `src/main/java/com/pfa/backend/infrastructure/exception/ApiError.java`
+2. `src/main/java/com/pfa/backend/infrastructure/exception/GlobalExceptionHandler.java`
+3. `src/main/java/com/pfa/backend/infrastructure/security/SecurityConfig.java`
+4. `src/main/java/com/pfa/backend/config/CorsConfig.java`
+5. `src/main/java/com/pfa/backend/infrastructure/security/JwtService.java`
+
+### What each one does
+
+1. `ApiError`: one JSON format for all errors.
+2. `GlobalExceptionHandler`: catches exceptions and returns `ApiError`.
+3. `SecurityConfig`: central security rules.
+4. `CorsConfig`: allows frontend calls.
+5. `JwtService`: token contract only (interface for now).
+
+## Step 2: Create auth DTOs + generic page DTO
+
+Create these files.
+
+1. `src/main/java/com/pfa/backend/application/dto/auth/LoginRequest.java`
+2. `src/main/java/com/pfa/backend/application/dto/auth/LoginResponse.java`
+3. `src/main/java/com/pfa/backend/application/dto/auth/RegisterRequest.java`
+4. `src/main/java/com/pfa/backend/application/dto/auth/UserSummaryResponse.java`
+5. `src/main/java/com/pfa/backend/application/dto/PageResponse.java`
+
+### Simple rule
+
+1. DTOs are request/response only.
+2. DTOs should not contain business logic.
+
+## Step 3: Create minimal domain model
+
+Create these files.
+
+1. `src/main/java/com/pfa/backend/domain/enums/Role.java`
+2. `src/main/java/com/pfa/backend/domain/model/BaseEntity.java`
+3. `src/main/java/com/pfa/backend/domain/model/User.java`
+4. `src/main/java/com/pfa/backend/domain/model/StudentProfile.java`
+5. `src/main/java/com/pfa/backend/domain/model/RecruiterProfile.java`
+6. `src/main/java/com/pfa/backend/domain/model/JobOffer.java`
+7. `src/main/java/com/pfa/backend/domain/model/Application.java`
+8. `src/main/java/com/pfa/backend/domain/model/CVDocument.java`
+
+### Minimal role enum values
+
+1. `ADMIN`
+2. `RECRUITER`
+3. `STUDENT`
+
+## Step 4: Create repositories
+
+Create these interfaces.
+
+1. `src/main/java/com/pfa/backend/infrastructure/persistence/UserRepository.java`
+2. `src/main/java/com/pfa/backend/infrastructure/persistence/JobOfferRepository.java`
+3. `src/main/java/com/pfa/backend/infrastructure/persistence/ApplicationRepository.java`
+
+Use Spring Data JPA (`extends JpaRepository<..., ...>`).
+
+## Step 5: Create 4 controllers with test routes
+
+Create these files.
+
+1. `src/main/java/com/pfa/backend/infrastructure/adapter/in/auth/AuthController.java`
+2. `src/main/java/com/pfa/backend/infrastructure/adapter/in/student/StudentController.java`
+3. `src/main/java/com/pfa/backend/infrastructure/adapter/in/recruiter/RecruiterController.java`
+4. `src/main/java/com/pfa/backend/infrastructure/adapter/in/admin/AdminController.java`
+
+Add one simple endpoint in each controller.
+
+1. `GET /api/v1/auth/ping`
+2. `GET /api/v1/students/ping`
+3. `GET /api/v1/recruiters/ping`
+4. `GET /api/v1/admin/ping`
+
+Return a small JSON object for now.
+
+## Step 6: Build and run checks
+
+From `backend/` run:
+
+```powershell
+mvn -q clean compile
+```
+
+If compile passes, run app:
+
+```powershell
+mvn spring-boot:run
+```
+
+Test endpoints:
+
+1. `http://localhost:8080/api/health`
+2. `http://localhost:8080/api/v1/auth/ping`
+3. `http://localhost:8080/api/v1/students/ping`
+4. `http://localhost:8080/api/v1/recruiters/ping`
+5. `http://localhost:8080/api/v1/admin/ping`
+
+## Step 7: Architecture rules (important)
+
+Keep these rules from day one.
+
+1. Controller calls Service only.
+2. Service handles business logic.
+3. Repository handles database access only.
+4. Controller returns DTOs, not JPA entities.
+5. Errors go through `GlobalExceptionHandler`.
+
+## Common beginner mistakes to avoid
+
+1. Putting business logic directly inside controllers.
+2. Returning entity classes directly in API responses.
+3. Mixing DTO and entity responsibilities.
+4. Creating many features before compiling small increments.
+5. Ignoring package boundaries.
+
+## Recommended work rhythm
+
+1. Create 2 to 4 files.
+2. Compile.
+3. Fix errors.
+4. Continue.
+
+Small steps are faster and safer than creating all files at once.
+
+## Next after this guide
+
+After this is done, start Phase 1:
+
+1. Complete entity relationships.
+2. Add validation annotations.
+3. Implement auth flow (register/login).
+4. Add first real business endpoint.
+
+## Phase 1 Starter Plan (recommended order)
+
+Use this order to move from skeleton to real backend features.
+
+### Step 1: Finalize domain relationships
+
+Focus on JPA relationships and ownership consistency.
+
+1. Confirm relation directions (`@OneToOne`, `@ManyToOne`, `@OneToMany`) and owning sides.
+2. Add `mappedBy` where needed for bidirectional links.
+3. Add cascade/fetch only where needed; keep defaults simple.
+4. Rebuild after each small batch:
+
+```powershell
+mvn -q clean compile
+```
+
+### Step 2: Add validation rules
+
+Put bean validation on input DTOs first.
+
+1. Add `@NotBlank`, `@Email`, `@Size`, etc. on request DTO fields.
+2. Use `@Valid` in controller methods.
+3. Extend `GlobalExceptionHandler` to return field-level errors for validation failures.
+4. Compile and test invalid input payloads.
+
+### Step 3: Build authentication flow
+
+Implement real register/login behavior.
+
+1. Create `AuthService` interface + implementation.
+2. Implement `JwtServiceImpl` from current `JwtService` interface.
+3. Add password hashing with `PasswordEncoder`.
+4. Add endpoints:
+	- `POST /api/v1/auth/register`
+	- `POST /api/v1/auth/login`
+5. Return DTOs only (never entity objects directly).
+
+### Step 4: Add first business feature
+
+Start with one simple business slice, for example job offers.
+
+1. Add service methods and DTOs for creating/listing offers.
+2. Keep controller thin: controller -> service -> repository.
+3. Add one pagination endpoint using `PageResponse<T>`.
+4. Test with sample data.
+
+### Step 5: Add tests before scaling
+
+1. Add controller/service tests for auth success/failure.
+2. Add at least one test for the first business endpoint.
+3. Keep test data minimal and deterministic.
+
+### Phase 1 done checklist
+
+1. Register/login works with hashed passwords and JWT.
+2. Validation errors return a consistent `ApiError` structure.
+3. At least one real business endpoint is functional.
+4. Build and tests pass.

@@ -1,0 +1,200 @@
+/* ========================================================
+   RECRUITER DASHBOARD — ESISA DESIGN SYSTEM
+   ======================================================== */
+
+/* ---------- RECRUITER SPECIFIC OVERRIDES ---------- */
+
+/* Stat icon variants for recruiter */
+.dash-stat-icon.teal { background: #F0FDFA; color: #0D9488; }
+[data-theme="dark"] .dash-stat-icon.teal { background: rgba(13,148,136,0.15); color: #2DD4BF; }
+.dash-stat-icon.amber { background: #FFFBEB; color: #D97706; }
+[data-theme="dark"] .dash-stat-icon.amber { background: rgba(217,119,6,0.15); color: #FBBF24; }
+.dash-stat-icon.rose { background: #FFF1F2; color: #E11D48; }
+[data-theme="dark"] .dash-stat-icon.rose { background: rgba(225,29,72,0.15); color: #FB7185; }
+.dash-stat-icon.indigo { background: #EEF2FF; color: #4F46E5; }
+[data-theme="dark"] .dash-stat-icon.indigo { background: rgba(79,70,229,0.15); color: #818CF8; }
+
+/* ---------- CANDIDATE CARDS ---------- */
+.dash-candidates { display: grid; grid-template-columns: repeat(3,1fr); gap: 1rem; }
+
+.dash-candidate-card {
+  padding: 1.25rem; border-radius: 1rem;
+  background: rgba(255,255,255,0.72);
+  border: 1px solid #DBEAFE;
+  backdrop-filter: blur(12px);
+  transition: all 0.25s ease; cursor: pointer;
+}
+.dash-candidate-card:hover { transform: translateY(-4px); border-color: #93C5FD; box-shadow: 0 12px 32px rgba(37,99,235,0.1); }
+[data-theme="dark"] .dash-candidate-card {
+  background: rgba(12,20,40,0.65);
+  border-color: rgba(30,58,138,0.35);
+}
+[data-theme="dark"] .dash-candidate-card:hover { border-color: rgba(59,130,246,0.5); }
+
+.dash-candidate-top { display: flex; align-items: center; gap: 0.875rem; margin-bottom: 0.875rem; }
+.dash-candidate-avatar {
+  width: 2.75rem; height: 2.75rem; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1rem; font-weight: 800; color: white;
+  flex-shrink: 0;
+}
+.dash-candidate-avatar.av-blue { background: linear-gradient(135deg,#2563EB,#1D4ED8); }
+.dash-candidate-avatar.av-purple { background: linear-gradient(135deg,#7C3AED,#6D28D9); }
+.dash-candidate-avatar.av-teal { background: linear-gradient(135deg,#0D9488,#0F766E); }
+
+.dash-candidate-name { font-size: 0.9375rem; font-weight: 700; color: #0F172A; margin: 0; }
+[data-theme="dark"] .dash-candidate-name { color: #E2E8F0; }
+.dash-candidate-program { font-size: 0.75rem; color: #64748B; margin: 0.1rem 0 0; }
+[data-theme="dark"] .dash-candidate-program { color: #94A3B8; }
+
+.dash-candidate-score {
+  display: flex; align-items: center; gap: 0.5rem;
+  padding: 0.5rem 0.75rem; border-radius: 0.625rem;
+  background: #EFF6FF; margin-bottom: 0.875rem;
+}
+[data-theme="dark"] .dash-candidate-score { background: rgba(37,99,235,0.1); }
+.dash-candidate-score-label { font-size: 0.6875rem; color: #64748B; }
+[data-theme="dark"] .dash-candidate-score-label { color: #94A3B8; }
+.dash-candidate-score-value { font-size: 0.875rem; font-weight: 800; color: #2563EB; margin-left: auto; }
+[data-theme="dark"] .dash-candidate-score-value { color: #60A5FA; }
+
+.dash-candidate-skills { display: flex; flex-wrap: wrap; gap: 0.375rem; margin-bottom: 0.875rem; }
+
+.dash-candidate-actions { display: flex; gap: 0.5rem; }
+.dash-candidate-btn {
+  flex: 1; padding: 0.5rem;
+  border-radius: 0.5rem; border: none;
+  font-family: var(--font-body);
+  font-size: 0.75rem; font-weight: 700;
+  cursor: pointer; transition: all 0.2s ease;
+}
+.dash-candidate-btn.primary {
+  color: white;
+  background: linear-gradient(135deg,#1E40AF,#2563EB);
+  box-shadow: 0 4px 14px rgba(37,99,235,0.2);
+}
+.dash-candidate-btn.primary:hover { box-shadow: 0 6px 20px rgba(37,99,235,0.35); }
+.dash-candidate-btn.secondary {
+  color: #64748B; background: #F1F5F9;
+  border: 1px solid #E2E8F0;
+}
+.dash-candidate-btn.secondary:hover { border-color: #93C5FD; color: #2563EB; }
+[data-theme="dark"] .dash-candidate-btn.secondary {
+  color: #94A3B8; background: rgba(30,41,59,0.5);
+  border-color: rgba(51,65,85,0.5);
+}
+[data-theme="dark"] .dash-candidate-btn.secondary:hover { border-color: rgba(59,130,246,0.4); color: #60A5FA; }
+
+/* ---------- ACTIVE OFFERS TABLE ---------- */
+.dash-offers-table {
+  width: 100%; border-collapse: separate; border-spacing: 0;
+  border-radius: 0.875rem; overflow: hidden;
+  background: rgba(255,255,255,0.72);
+  border: 1px solid #DBEAFE;
+  backdrop-filter: blur(12px);
+}
+[data-theme="dark"] .dash-offers-table {
+  background: rgba(12,20,40,0.65);
+  border-color: rgba(30,58,138,0.35);
+}
+
+.dash-offers-table th {
+  text-align: left; padding: 0.875rem 1rem;
+  font-size: 0.6875rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.08em;
+  color: #64748B; background: #F8FAFC;
+  border-bottom: 1px solid #E2E8F0;
+}
+[data-theme="dark"] .dash-offers-table th {
+  color: #94A3B8; background: rgba(15,23,42,0.6);
+  border-bottom-color: rgba(51,65,85,0.4);
+}
+
+.dash-offers-table td {
+  padding: 0.875rem 1rem; font-size: 0.8125rem;
+  color: #334155; border-bottom: 1px solid #F1F5F9;
+}
+[data-theme="dark"] .dash-offers-table td {
+  color: #CBD5E1; border-bottom-color: rgba(51,65,85,0.25);
+}
+.dash-offers-table tr:last-child td { border-bottom: none; }
+.dash-offers-table tr:hover td { background: rgba(37,99,235,0.03); }
+[data-theme="dark"] .dash-offers-table tr:hover td { background: rgba(59,130,246,0.05); }
+
+.dash-offer-title { font-weight: 700; color: #0F172A; }
+[data-theme="dark"] .dash-offer-title { color: #E2E8F0; }
+
+.dash-status-badge {
+  display: inline-flex; padding: 0.2rem 0.5rem;
+  border-radius: 9999px; font-size: 0.625rem;
+  font-weight: 700; text-transform: uppercase;
+}
+.dash-status-badge.active { background: #ECFDF5; color: #059669; }
+[data-theme="dark"] .dash-status-badge.active { background: rgba(5,150,105,0.15); color: #34D399; }
+.dash-status-badge.paused { background: #FEF9C3; color: #A16207; }
+[data-theme="dark"] .dash-status-badge.paused { background: rgba(161,98,7,0.15); color: #FDE047; }
+.dash-status-badge.closed { background: #FEE2E2; color: #DC2626; }
+[data-theme="dark"] .dash-status-badge.closed { background: rgba(220,38,38,0.15); color: #FCA5A5; }
+
+/* ---------- QUICK ACTIONS ---------- */
+.dash-quick-actions { display: grid; grid-template-columns: repeat(3,1fr); gap: 1rem; margin-bottom: 2rem; }
+
+.dash-quick-action {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 0.625rem; padding: 1.25rem; border-radius: 1rem;
+  background: rgba(255,255,255,0.72);
+  border: 1px solid #DBEAFE;
+  backdrop-filter: blur(12px);
+  cursor: pointer; transition: all 0.25s ease;
+}
+.dash-quick-action:hover { transform: translateY(-3px); border-color: #93C5FD; box-shadow: 0 8px 24px rgba(37,99,235,0.1); }
+[data-theme="dark"] .dash-quick-action {
+  background: rgba(12,20,40,0.65);
+  border-color: rgba(30,58,138,0.35);
+}
+[data-theme="dark"] .dash-quick-action:hover { border-color: rgba(59,130,246,0.5); }
+
+.dash-quick-action-icon {
+  width: 2.75rem; height: 2.75rem;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 0.75rem;
+  background: #EFF6FF; color: #2563EB;
+}
+[data-theme="dark"] .dash-quick-action-icon { background: rgba(37,99,235,0.15); color: #60A5FA; }
+
+.dash-quick-action-label { font-size: 0.8125rem; font-weight: 700; color: #0F172A; text-align: center; }
+[data-theme="dark"] .dash-quick-action-label { color: #E2E8F0; }
+
+/* ---------- RESPONSIVE ---------- */
+
+/* ---------- HIRING PIPELINE ---------- */
+.dash-pipeline { display: flex; flex-direction: column; gap: 0.875rem; }
+.dash-pipeline-row { display: flex; align-items: center; gap: 0.75rem; }
+.dash-pipeline-label {
+  width: 90px; flex-shrink: 0;
+  font-size: 0.75rem; font-weight: 600; color: #334155;
+}
+[data-theme="dark"] .dash-pipeline-label { color: #CBD5E1; }
+.dash-pipeline-bar-bg {
+  flex: 1; height: 10px; border-radius: 9999px;
+  background: #E2E8F0; overflow: hidden;
+}
+[data-theme="dark"] .dash-pipeline-bar-bg { background: rgba(51,65,85,0.4); }
+.dash-pipeline-bar-fill { height: 100%; border-radius: 9999px; min-width: 4px; }
+.dash-pipeline-count {
+  width: 36px; text-align: right;
+  font-size: 0.8125rem; font-weight: 800; color: #0F172A;
+}
+[data-theme="dark"] .dash-pipeline-count { color: #E2E8F0; }
+
+/* ---------- RESPONSIVE ---------- */
+@media (max-width: 1024px) {
+  .dash-candidates { grid-template-columns: repeat(2,1fr); }
+  .dash-quick-actions { grid-template-columns: repeat(2,1fr); }
+}
+
+@media (max-width: 768px) {
+  .dash-candidates { grid-template-columns: 1fr; }
+  .dash-quick-actions { grid-template-columns: 1fr; }
+  .dash-offers-table { font-size: 0.75rem; }
+}
