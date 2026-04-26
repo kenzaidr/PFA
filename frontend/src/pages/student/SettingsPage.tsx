@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import {
   Briefcase, BookOpen, FileText, Settings, BarChart3, Bell,
   LogOut, Menu, X, Sun, Moon, User, Shield, Palette,
@@ -23,9 +23,39 @@ export default function SettingsPage() {
       <aside className={`dash-sidebar ${sidebarOpen ? 'open' : ''}`}>
         <div className="dash-brand">
           <img src="/esisa-logo.svg" alt="ESISA" className="dash-brand-logo" />
-          <div><p className="dash-brand-name">ESISA</p></div>
+          <div>
+            <p className="dash-brand-name">ESISA</p>
+            <p className="dash-brand-sub">Espace Étudiant</p>
+          </div>
         </div>
-        <button className="dash-nav-logout" onClick={() => navigate('/')}><LogOut size={18} /></button>
+
+        <nav className="dash-side-nav">
+          <NavLink to="/student/overview" className={({ isActive }) => `dash-side-link ${isActive ? 'active' : ''}`}>
+            <BarChart3 size={16} />
+            <span>Overview</span>
+          </NavLink>
+          <NavLink to="/student/learning" className={({ isActive }) => `dash-side-link ${isActive ? 'active' : ''}`}>
+            <BookOpen size={16} />
+            <span>Learning</span>
+          </NavLink>
+          <NavLink to="/student/opportunities" className={({ isActive }) => `dash-side-link ${isActive ? 'active' : ''}`}>
+            <Briefcase size={16} />
+            <span>Opportunities</span>
+          </NavLink>
+          <NavLink to="/student/cv-letters" className={({ isActive }) => `dash-side-link ${isActive ? 'active' : ''}`}>
+            <FileText size={16} />
+            <span>CV & Letters</span>
+          </NavLink>
+          <NavLink to="/student/settings" className={({ isActive }) => `dash-side-link ${isActive ? 'active' : ''}`}>
+            <Settings size={16} />
+            <span>Settings</span>
+          </NavLink>
+        </nav>
+
+        <button className="dash-nav-logout" onClick={() => navigate('/')}>
+          <LogOut size={18} />
+          <span>Déconnexion</span>
+        </button>
       </aside>
 
       <div className="dash-main">

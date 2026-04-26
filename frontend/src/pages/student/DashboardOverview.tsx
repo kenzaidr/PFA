@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Link, useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import {
   TrendingUp, Briefcase, Zap, Award, BarChart3, BookOpen,
   FileText, Settings, Bell, LogOut, Menu, X, ChevronRight,
@@ -62,6 +62,29 @@ export default function DashboardOverview() {
             <p className="dash-profile-role">5ème Année — IL</p>
           </div>
         </div>
+
+        <nav className="dash-side-nav">
+          <NavLink to="/student/overview" className={({ isActive }) => `dash-side-link ${isActive ? 'active' : ''}`}>
+            <BarChart3 size={16} />
+            <span>Overview</span>
+          </NavLink>
+          <NavLink to="/student/learning" className={({ isActive }) => `dash-side-link ${isActive ? 'active' : ''}`}>
+            <BookOpen size={16} />
+            <span>Learning</span>
+          </NavLink>
+          <NavLink to="/student/opportunities" className={({ isActive }) => `dash-side-link ${isActive ? 'active' : ''}`}>
+            <Briefcase size={16} />
+            <span>Opportunities</span>
+          </NavLink>
+          <NavLink to="/student/cv-letters" className={({ isActive }) => `dash-side-link ${isActive ? 'active' : ''}`}>
+            <FileText size={16} />
+            <span>CV & Letters</span>
+          </NavLink>
+          <NavLink to="/student/settings" className={({ isActive }) => `dash-side-link ${isActive ? 'active' : ''}`}>
+            <Settings size={16} />
+            <span>Settings</span>
+          </NavLink>
+        </nav>
 
         <button className="dash-nav-logout" onClick={() => navigate('/')}>
           <LogOut size={18} />

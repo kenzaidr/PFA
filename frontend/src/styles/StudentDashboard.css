@@ -38,6 +38,55 @@
 
 .dash-sidebar.closed { transform: translateX(-100%); }
 
+.dash-side-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin-bottom: 1.25rem;
+}
+
+.dash-side-link {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.65rem 0.8rem;
+  border-radius: 0.7rem;
+  border: 1px solid transparent;
+  color: #64748B;
+  text-decoration: none;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.dash-side-link:hover {
+  color: #1D4ED8;
+  background: #EFF6FF;
+  border-color: #DBEAFE;
+}
+
+.dash-side-link.active {
+  color: #1D4ED8;
+  background: #DBEAFE;
+  border-color: #BFDBFE;
+}
+
+[data-theme="dark"] .dash-side-link {
+  color: #94A3B8;
+}
+
+[data-theme="dark"] .dash-side-link:hover {
+  color: #93C5FD;
+  background: rgba(37,99,235,0.12);
+  border-color: rgba(59,130,246,0.25);
+}
+
+[data-theme="dark"] .dash-side-link.active {
+  color: #BFDBFE;
+  background: rgba(37,99,235,0.18);
+  border-color: rgba(59,130,246,0.35);
+}
+
 .dash-brand { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 2.5rem; }
 .dash-brand-logo { width: 2.25rem; height: 2.25rem; border-radius: 0.5rem; object-fit: cover; }
 .dash-brand-name {
@@ -412,6 +461,8 @@
   font-size: 0.8125rem; font-weight: 600;
   color: #94A3B8; background: transparent;
   border: none; cursor: pointer; transition: all 0.2s ease;
+  margin-top: auto;
+  width: 100%;
 }
 .dash-nav-logout:hover { color: #EF4444; background: rgba(239,68,68,0.08); }
 

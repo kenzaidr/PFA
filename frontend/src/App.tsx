@@ -3,6 +3,12 @@ import EsisaPlatform from './EsisaPlatform';
 import LoginPage from './pages/LoginPage';
 import ForgotPasswordPage from './pages/ForgotPasswordPage';
 import SignUpPage from './pages/SignUpPage';
+import StudentDashboard from './pages/student/StudentDashboard';
+import DashboardOverview from './pages/student/DashboardOverview';
+import DashboardLearning from './pages/student/DashboardLearning';
+import OpportunitiesPage from './pages/student/OpportunitiesPage';
+import CVLettersPage from './pages/student/CVLettersPage';
+import StudentSettingsPage from './pages/student/SettingsPage';
 
 // Recruiter Dashboard
 import RecruiterLayout from './pages/recruiter/RecruiterLayout';
@@ -22,6 +28,12 @@ export default function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/signup" element={<SignUpPage />} />
+        <Route path="/student" element={<StudentDashboard />} />
+        <Route path="/student/overview" element={<DashboardOverview />} />
+        <Route path="/student/learning" element={<DashboardLearning />} />
+        <Route path="/student/opportunities" element={<OpportunitiesPage />} />
+        <Route path="/student/cv-letters" element={<CVLettersPage />} />
+        <Route path="/student/settings" element={<StudentSettingsPage />} />
         
         {/* Recruiter Dashboard Routes */}
         <Route path="/recruiter" element={<RecruiterLayout />}>

@@ -228,10 +228,10 @@ export default function EsisaPlatform() {
           </p>
 
           <div className="hero-buttons">
-            <button className="btn-explore">
+            <Link to="/student" className="btn-explore">
               Explore AI Platform
               <ArrowRight className="btn-explore-arrow" size={18} />
-            </button>
+            </Link>
             <button className="btn-vision">Our Vision</button>
           </div>
         </motion.div>
