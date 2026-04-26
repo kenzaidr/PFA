@@ -292,6 +292,51 @@ export default function EsisaPlatform() {
         </motion.div>
       </header>
 
+      {/* ==================== MARQUEE ==================== */}
+      <div className="marquee-section">
+        <div className="marquee-label">Powered by ESISA</div>
+        <div className="marquee-track">
+          <div className="marquee-content">
+            {[
+              'AI CV Builder',
+              'Smart Matching',
+              'Motivation Letters',
+              'Career Analytics',
+              'ESISA Network',
+              'Skills Assessment',
+              'Company Partners',
+              'Student Profiles',
+              'CV Analysis',
+              'Job Recommendations',
+            ].map((item, i) => (
+              <span key={`a-${i}`} className="marquee-item">
+                <span className="marquee-dot" />
+                {item}
+              </span>
+            ))}
+          </div>
+          <div className="marquee-content" aria-hidden="true">
+            {[
+              'AI CV Builder',
+              'Smart Matching',
+              'Motivation Letters',
+              'Career Analytics',
+              'ESISA Network',
+              'Skills Assessment',
+              'Company Partners',
+              'Student Profiles',
+              'CV Analysis',
+              'Job Recommendations',
+            ].map((item, i) => (
+              <span key={`b-${i}`} className="marquee-item">
+                <span className="marquee-dot" />
+                {item}
+              </span>
+            ))}
+          </div>
+        </div>
+      </div>
+
       {/* ==================== FEATURES ==================== */}
       <section className="features-section">
         {[
