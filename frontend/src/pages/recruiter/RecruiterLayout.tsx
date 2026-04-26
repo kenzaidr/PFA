@@ -14,14 +14,18 @@ import {
   X,
   Calendar,
   BookOpen,
-  Trello
+  Trello,
+  PanelLeftClose,
+  PanelLeftOpen
 } from 'lucide-react';
 import '../../styles/RecruiterDashboard.css';
 import EditProfileModal from './EditProfileModal';
+import ControlCenter from './ControlCenter';
 
 export default function RecruiterLayout() {
   const location = useLocation();
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const [darkMode, setDarkMode] = useState<boolean>(() => {
     if (typeof window === 'undefined') return false;
@@ -63,7 +67,7 @@ export default function RecruiterLayout() {
       )}
 
       {/* Sidebar */}
-      <aside className={`dashboard-sidebar ${mobileSidebarOpen ? 'dashboard-sidebar--open' : ''}`}>
+      <aside className={`dashboard-sidebar ${mobileSidebarOpen ? 'dashboard-sidebar--open' : ''} ${isSidebarCollapsed ? 'dashboard-sidebar--collapsed' : ''}`}>
         <div className="dashboard-brand">
           <img src="/esisa-logo.svg" alt="ESISA Logo" className="dashboard-brand-logo" />
           <div className="dashboard-brand-text">
@@ -79,56 +83,69 @@ export default function RecruiterLayout() {
             className={({ isActive }) => `dashboard-nav-item ${isActive ? 'active' : ''}`}
           >
             <LayoutDashboard size={18} className="dashboard-nav-icon" />
-            Overview
+            <span>Overview</span>
           </NavLink>
           <NavLink 
             to="/recruiter/candidates" 
             className={({ isActive }) => `dashboard-nav-item ${isActive ? 'active' : ''}`}
           >
             <Users size={18} className="dashboard-nav-icon" />
-            Candidates
+            <span>Candidates</span>
           </NavLink>
           <NavLink 
             to="/recruiter/pipeline" 
             className={({ isActive }) => `dashboard-nav-item ${isActive ? 'active' : ''}`}
           >
             <Trello size={18} className="dashboard-nav-icon" />
-            Pipeline
+            <span>Pipeline</span>
           </NavLink>
           <NavLink 
             to="/recruiter/jobs" 
             className={({ isActive }) => `dashboard-nav-item ${isActive ? 'active' : ''}`}
           >
             <Briefcase size={18} className="dashboard-nav-icon" />
-            Job Postings
+            <span>Job Postings</span>
           </NavLink>
           <NavLink 
             to="/recruiter/calendar" 
             className={({ isActive }) => `dashboard-nav-item ${isActive ? 'active' : ''}`}
           >
             <Calendar size={18} className="dashboard-nav-icon" />
-            Calendar
+            <span>Calendar</span>
           </NavLink>
           <NavLink 
             to="/recruiter/notebook" 
             className={({ isActive }) => `dashboard-nav-item ${isActive ? 'active' : ''}`}
           >
             <BookOpen size={18} className="dashboard-nav-icon" />
-            Notebook
+            <span>Notebook</span>
           </NavLink>
           <NavLink 
             to="/recruiter/settings" 
             className={({ isActive }) => `dashboard-nav-item ${isActive ? 'active' : ''}`}
           >
             <Settings size={18} className="dashboard-nav-icon" />
-            Settings
+            <span>Settings</span>
           </NavLink>
         </nav>
 
         <div className="dashboard-sidebar-footer">
-          <button className="dashboard-nav-item" onClick={() => console.log('Logout')}>
+          <button className="dashboard-nav-item" onClick={() => console.log('Logout')} style={{ width: '100%' }}>
             <LogOut size={18} className="dashboard-nav-icon" />
-            Sign Out
+            <span>Sign Out</span>
+          </button>
+          
+          <button 
+            className="dashboard-nav-item" 
+            onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
+            style={{ width: '100%', marginTop: '0.25rem', color: '#64748B' }}
+          >
+            {isSidebarCollapsed ? (
+              <PanelLeftOpen size={18} className="dashboard-nav-icon" />
+            ) : (
+              <PanelLeftClose size={18} className="dashboard-nav-icon" />
+            )}
+            <span>Collapse</span>
           </button>
         </div>
       </aside>
@@ -190,6 +207,7 @@ export default function RecruiterLayout() {
       </main>
 
       <EditProfileModal isOpen={isProfileModalOpen} onClose={() => setIsProfileModalOpen(false)} />
+      <ControlCenter />
     </div>
   );
 }
