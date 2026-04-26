@@ -204,7 +204,7 @@ export default function EsisaPlatform() {
               {darkMode ? <Sun size={16} /> : <Moon size={16} />}
             </button>
             <Link to="/login" className="btn-book-call">Login</Link>
-            <button className="btn-nav-demo">Start now</button>
+            <Link to="/signup" className="btn-nav-demo">Start now</Link>
           </div>
         </div>
       </nav>
