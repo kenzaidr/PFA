@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { AnimatePresence, motion, useScroll, useTransform } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import './styles/EsisaPlatform.css';
 import {
   ArrowRight,
@@ -21,7 +22,7 @@ import {
 } from 'lucide-react';
 
 const ESISA_COLORS = {
-  blue: '#2563EB',
+  blue: 'var(--color-primary-600)',
 };
 
 /* ------------------------------------------------
@@ -143,6 +144,7 @@ const ConnectionVisualization = () => {
    ------------------------------------------------ */
 export default function EsisaPlatform() {
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
   const [darkMode, setDarkMode] = useState<boolean>(() => {
     if (typeof window === 'undefined') return false;
     return window.localStorage.getItem('esisa-theme') === 'dark';
@@ -158,7 +160,7 @@ export default function EsisaPlatform() {
 
   useEffect(() => {
     window.localStorage.setItem('esisa-theme', darkMode ? 'dark' : 'light');
-    document.body.style.backgroundColor = darkMode ? '#050C18' : '#EEF4FF';
+    document.documentElement.setAttribute('data-theme', darkMode ? 'dark' : 'light');
   }, [darkMode]);
 
   return (
@@ -197,7 +199,7 @@ export default function EsisaPlatform() {
             <button onClick={() => setDarkMode((prev) => !prev)} aria-label="Toggle dark mode" className="dark-mode-toggle">
               {darkMode ? <Sun size={16} /> : <Moon size={16} />}
             </button>
-            <button className="btn-book-call">Book Call</button>
+            <button onClick={() => navigate('/student-dashboard')} className="btn-book-call">Book Call</button>
             <button className="btn-nav-demo">Request Demo</button>
           </div>
         </div>
