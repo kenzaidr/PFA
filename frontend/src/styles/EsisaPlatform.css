@@ -167,25 +167,32 @@
    3. CONNECTION VISUALIZATION
    -------------------------------------------------- */
 
+@keyframes hubPulse {
+  0%, 100% { box-shadow: 0 16px 36px rgba(25, 67, 155, 0.28), 0 0 0 0 rgba(37, 99, 235, 0); }
+  50%      { box-shadow: 0 16px 36px rgba(25, 67, 155, 0.28), 0 0 24px 6px rgba(37, 99, 235, 0.15); }
+}
+
+@keyframes hubPulseDark {
+  0%, 100% { box-shadow: 0 16px 36px rgba(0, 0, 0, 0.5), 0 0 0 0 rgba(59, 130, 246, 0); }
+  50%      { box-shadow: 0 16px 36px rgba(0, 0, 0, 0.5), 0 0 28px 8px rgba(59, 130, 246, 0.2); }
+}
+
 .connection-container {
   position: relative;
-  margin: 0 auto;
   display: flex;
-  height: 320px;
-  width: 100%;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
+  height: 220px;
   border-radius: 1.5rem;
-  border: 1px solid rgba(255, 255, 255, 0.7);
-  padding: 1rem;
+  border: 1px solid rgba(219, 234, 254, 0.5);
+  overflow: hidden;
   background: linear-gradient(to bottom, #F5F9FF, #EAF1FF);
   box-shadow: 0 20px 50px rgba(31, 72, 161, 0.14);
 }
 
 [data-theme="dark"] .connection-container {
   border-color: rgba(30, 58, 138, 0.5);
-  background: linear-gradient(to bottom, #0B1526, #0E1D38);
+  background: linear-gradient(135deg, #070E1E, #0B1A36, #0E1D38);
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
 }
 
@@ -214,11 +221,13 @@
   height: 65%;
   width: 65%;
   border-radius: 9999px;
-  border: 1px solid rgba(191, 219, 254, 0.7);
+  border: 1.5px solid rgba(191, 219, 254, 0.5);
+  box-shadow: 0 0 16px rgba(37, 99, 235, 0.06);
 }
 
 [data-theme="dark"] .connection-ring-outer {
-  border-color: rgba(29, 78, 216, 0.3);
+  border-color: rgba(59, 130, 246, 0.18);
+  box-shadow: 0 0 24px rgba(37, 99, 235, 0.08);
 }
 
 .connection-ring-inner {
@@ -226,28 +235,60 @@
   height: 42%;
   width: 42%;
   border-radius: 9999px;
-  border: 1px solid rgba(147, 197, 253, 0.7);
+  border: 1.5px solid rgba(147, 197, 253, 0.5);
+  box-shadow: 0 0 12px rgba(37, 99, 235, 0.05);
 }
 
 [data-theme="dark"] .connection-ring-inner {
-  border-color: rgba(37, 99, 235, 0.3);
+  border-color: rgba(59, 130, 246, 0.22);
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.1);
+}
+
+/* Orbital particles on the rings */
+.orbital-dot {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 9999px;
+}
+
+.orbital-dot--1 {
+  top: -3px;
+  left: 50%;
+  background-color: #3B82F6;
+  box-shadow: 0 0 8px rgba(59, 130, 246, 0.6);
+}
+
+.orbital-dot--2 {
+  bottom: -3px;
+  right: 25%;
+  background-color: #FACC15;
+  box-shadow: 0 0 8px rgba(250, 204, 21, 0.5);
+}
+
+.orbital-dot--3 {
+  top: 50%;
+  right: -3px;
+  background-color: #60A5FA;
+  box-shadow: 0 0 8px rgba(96, 165, 250, 0.6);
 }
 
 /* Central hub card */
 .connection-hub {
   z-index: 20;
   border-radius: 1rem;
-  border: 1px solid white;
+  border: 1px solid rgba(255, 255, 255, 0.9);
   padding: 1rem 1.25rem;
   text-align: center;
   background-color: rgba(255, 255, 255, 0.95);
   box-shadow: 0 16px 36px rgba(25, 67, 155, 0.28);
+  animation: hubPulse 3s ease-in-out infinite;
 }
 
 [data-theme="dark"] .connection-hub {
-  border-color: rgba(30, 64, 175, 0.6);
+  border-color: rgba(59, 130, 246, 0.35);
   background-color: rgba(12, 26, 52, 0.95);
-  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.5);
+  animation-name: hubPulseDark;
 }
 
 .hub-icon {
@@ -304,19 +345,22 @@
   border-radius: 0.75rem;
   padding: 0.75rem;
   color: white;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .node-icon.students {
   background-color: #2563EB;
+  box-shadow: 0 8px 20px rgba(37, 99, 235, 0.35), 0 0 12px rgba(37, 99, 235, 0.15);
 }
 
 .node-icon.schools {
   background-color: #1749B5;
+  box-shadow: 0 8px 20px rgba(23, 73, 181, 0.35), 0 0 12px rgba(23, 73, 181, 0.15);
 }
 
 .node-icon.corporate {
   background-color: #0E2D80;
+  box-shadow: 0 8px 20px rgba(14, 45, 128, 0.35), 0 0 12px rgba(14, 45, 128, 0.15);
 }
 
 .node-label {
@@ -342,6 +386,11 @@
   top: 50%;
   z-index: -10;
   overflow: visible;
+  filter: drop-shadow(0 0 3px rgba(37, 99, 235, 0.25));
+}
+
+[data-theme="dark"] .connection-line-svg {
+  filter: drop-shadow(0 0 5px rgba(59, 130, 246, 0.3));
 }
 
 

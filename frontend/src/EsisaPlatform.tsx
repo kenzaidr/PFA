@@ -89,22 +89,33 @@ const ConnectionVisualization = () => {
     <div className="connection-container">
       <div className="connection-gradient" />
 
+      {/* Orbital rings */}
       <motion.div
         className="connection-ring-outer"
         animate={{ rotate: 360 }}
         transition={{ duration: 24, repeat: Infinity, ease: 'linear' }}
-      />
+      >
+        {/* Orbital particles */}
+        <div className="orbital-dot orbital-dot--1" />
+        <div className="orbital-dot orbital-dot--2" />
+      </motion.div>
       <motion.div
         className="connection-ring-inner"
         animate={{ rotate: -360 }}
         transition={{ duration: 18, repeat: Infinity, ease: 'linear' }}
-      />
+      >
+        <div className="orbital-dot orbital-dot--3" />
+      </motion.div>
 
       {/* Central hub */}
-      <motion.div whileHover={{ scale: 1.03 }} className="connection-hub">
-        <div className="hub-icon">
+      <motion.div whileHover={{ scale: 1.05 }} className="connection-hub">
+        <motion.div
+          className="hub-icon"
+          animate={{ scale: [1, 1.06, 1] }}
+          transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut' }}
+        >
           <Network size={28} />
-        </div>
+        </motion.div>
         <p className="hub-label">Core intelligence</p>
         <p className="hub-title">ESISA HUB</p>
       </motion.div>
@@ -120,7 +131,7 @@ const ConnectionVisualization = () => {
           className="connection-node"
           style={{ left: `calc(50% + ${node.x})`, top: `calc(50% + ${node.y})` }}
         >
-          <motion.div className={`node-icon ${node.colorClass}`} whileHover={{ y: -4 }}>
+          <motion.div className={`node-icon ${node.colorClass}`} whileHover={{ y: -6, scale: 1.08 }}>
             {node.icon}
           </motion.div>
           <span className="node-label">{node.label}</span>
@@ -129,12 +140,12 @@ const ConnectionVisualization = () => {
             <motion.line
               x1="0"
               y1="0"
-              x2={node.x === '-26%' ? 100 : node.x === '26%' ? -100 : 0}
-              y2={node.y === '-26%' ? 80 : -90}
+              x2={node.x === '-26%' ? 60 : node.x === '26%' ? -60 : 0}
+              y2={node.y === '-26%' ? 50 : -55}
               stroke={ESISA_COLORS.blue}
-              strokeWidth="2"
-              strokeDasharray="8 6"
-              animate={{ strokeDashoffset: [-20, 0] }}
+              strokeWidth="1.5"
+              strokeDasharray="6 5"
+              animate={{ strokeDashoffset: [-16, 0] }}
               transition={{ repeat: Infinity, duration: 1.2, ease: 'linear' }}
             />
           </svg>
