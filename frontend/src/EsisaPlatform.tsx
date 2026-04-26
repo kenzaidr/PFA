@@ -1,21 +1,27 @@
 import { useEffect, useState } from 'react';
 import { AnimatePresence, motion, useScroll, useTransform } from 'framer-motion';
+import { Link } from 'react-router-dom';
 import './styles/EsisaPlatform.css';
 import {
   ArrowRight,
   BriefcaseBusiness,
   Clock3,
   ChevronDown,
+  Facebook,
   Globe2,
   GraduationCap,
   Handshake,
+  Instagram,
   Layers,
   LineChart,
   Moon,
   Network,
+  Send,
   Radar,
   School,
   ShieldCheck,
+  Youtube,
+  Linkedin,
   Sun,
   Users,
 } from 'lucide-react';
@@ -197,8 +203,8 @@ export default function EsisaPlatform() {
             <button onClick={() => setDarkMode((prev) => !prev)} aria-label="Toggle dark mode" className="dark-mode-toggle">
               {darkMode ? <Sun size={16} /> : <Moon size={16} />}
             </button>
-            <button className="btn-book-call">Book Call</button>
-            <button className="btn-nav-demo">Request Demo</button>
+            <Link to="/login" className="btn-book-call">Login</Link>
+            <Link to="/signup" className="btn-nav-demo">Start now</Link>
           </div>
         </div>
       </nav>
@@ -231,19 +237,6 @@ export default function EsisaPlatform() {
               <ArrowRight className="btn-explore-arrow" size={18} />
             </button>
             <button className="btn-vision">Our Vision</button>
-          </div>
-
-          <div className="hero-stats">
-            {[
-              { k: 'AI', v: 'CV Generation' },
-              { k: 'AI', v: 'Motivation Letters' },
-              { k: 'AI', v: 'CV Analysis Model' },
-            ].map((stat) => (
-              <div key={stat.v} className="stat-card">
-                <p className="stat-value">{stat.k}</p>
-                <p className="stat-label">{stat.v}</p>
-              </div>
-            ))}
           </div>
         </motion.div>
 
@@ -429,14 +422,70 @@ export default function EsisaPlatform() {
       {/* ==================== FOOTER ==================== */}
       <footer className="site-footer">
         <div className="footer-inner">
-          <div className="footer-brand">
-            <img src="/esisa-logo.svg" alt="ESISA logo" className="footer-logo" />
-            <span className="footer-brand-name">ESISA</span>
+          <div className="footer-brand-block">
+            <div className="footer-brand">
+              <img src="/esisa-logo.svg" alt="ESISA logo" className="footer-logo" />
+              <span className="footer-brand-name">ESISA</span>
+            </div>
+            <p className="footer-note">
+              Plateforme carrière ESISA pour les stages, l’alternance et la mise en relation avec les entreprises partenaires.
+            </p>
+            <div className="footer-pills" aria-label="Footer highlights">
+              <span>AI matching</span>
+              <span>CV analysis</span>
+              <span>Partner network</span>
+            </div>
           </div>
-          <p className="footer-copyright">Copyright 2026 ESISA Ecosystem. All rights reserved.</p>
-          <div className="footer-links">
-            <a href="#">Privacy</a>
-            <a href="#">Contact</a>
+
+          <div className="footer-links-group">
+            <p className="footer-links-title">Platform</p>
+            <div className="footer-links">
+              <a href="#">Overview</a>
+              <a href="#">Partners</a>
+              <a href="#">Contact</a>
+            </div>
+          </div>
+
+          <div className="footer-social-newsletter">
+            <div className="footer-social-block">
+              <p className="footer-links-title">Suivez l’école d'ingénieurs ESISA</p>
+              <div className="footer-social-icons" aria-label="Social links">
+                <a href="#" className="footer-social-icon facebook" aria-label="Facebook">
+                  <Facebook size={18} />
+                </a>
+                <a href="#" className="footer-social-icon instagram" aria-label="Instagram">
+                  <Instagram size={18} />
+                </a>
+                <a href="#" className="footer-social-icon youtube" aria-label="YouTube">
+                  <Youtube size={18} />
+                </a>
+                <a href="#" className="footer-social-icon linkedin" aria-label="LinkedIn">
+                  <Linkedin size={18} />
+                </a>
+              </div>
+            </div>
+
+            <div className="footer-newsletter-block">
+              <p className="footer-links-title">Newsletter ESISA</p>
+              <p className="footer-newsletter-text">
+                Recevez les actualités, dates clés d'inscription et événements de l'école d'ingénieurs.
+              </p>
+              <form className="footer-newsletter-form">
+                <input
+                  type="email"
+                  placeholder="Votre adresse e-mail"
+                  aria-label="Votre adresse e-mail"
+                />
+                <button type="submit" aria-label="S'inscrire à la newsletter">
+                  <Send size={16} />
+                </button>
+              </form>
+            </div>
+          </div>
+
+          <div className="footer-meta">
+            <p className="footer-copyright">Copyright 2026 ESISA Ecosystem. All rights reserved.</p>
+            <a href="#" className="footer-privacy-link">Privacy</a>
           </div>
         </div>
       </footer>
