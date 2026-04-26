@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { AnimatePresence, motion, useScroll, useTransform } from 'framer-motion';
+import { Link } from 'react-router-dom';
 import './styles/EsisaPlatform.css';
 import {
   ArrowRight,
@@ -202,7 +203,7 @@ export default function EsisaPlatform() {
             <button onClick={() => setDarkMode((prev) => !prev)} aria-label="Toggle dark mode" className="dark-mode-toggle">
               {darkMode ? <Sun size={16} /> : <Moon size={16} />}
             </button>
-            <button className="btn-book-call">Login</button>
+            <Link to="/login" className="btn-book-call">Login</Link>
             <button className="btn-nav-demo">Start now</button>
           </div>
         </div>
