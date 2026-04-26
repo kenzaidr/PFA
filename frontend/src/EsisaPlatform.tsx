@@ -149,6 +149,7 @@ const ConnectionVisualization = () => {
    ------------------------------------------------ */
 export default function EsisaPlatform() {
   const [loading, setLoading] = useState(true);
+  const [scrolled, setScrolled] = useState(false);
   const [darkMode, setDarkMode] = useState<boolean>(() => {
     if (typeof window === 'undefined') return false;
     return window.localStorage.getItem('esisa-theme') === 'dark';
@@ -167,6 +168,12 @@ export default function EsisaPlatform() {
     document.body.style.backgroundColor = darkMode ? '#050C18' : '#EEF4FF';
   }, [darkMode]);
 
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 20);
+    window.addEventListener('scroll', onScroll);
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
   return (
     <div className="page-root" data-theme={darkMode ? 'dark' : 'light'}>
 
@@ -183,7 +190,7 @@ export default function EsisaPlatform() {
       </motion.div>
 
       {/* ==================== NAVIGATION ==================== */}
-      <nav className="navbar">
+      <nav className={`navbar${scrolled ? ' navbar--scrolled' : ''}`}>
         <div className="navbar-inner">
           <div className="navbar-brand">
             <img src="/esisa-logo.svg" alt="ESISA logo" className="navbar-logo" />
