@@ -17,7 +17,7 @@ import {
   Layers,
   LineChart,
   Moon,
-  Network,
+  BrainCircuit,
   Send,
   Radar,
   School,
@@ -80,79 +80,78 @@ const LoadingScreen = () => (
 /* ------------------------------------------------
    CONNECTION VISUALIZATION
    ------------------------------------------------ */
+const ORBIT_DURATION = 24; // seconds per full revolution
+
 const ConnectionVisualization = () => {
   const nodes = [
-    { icon: <Users size={20} />, label: 'Students', colorClass: 'students', x: '-26%', y: '-26%' },
-    { icon: <School size={20} />, label: 'Schools', colorClass: 'schools', x: '26%', y: '-26%' },
-    { icon: <BriefcaseBusiness size={20} />, label: 'Corporate', colorClass: 'corporate', x: '0%', y: '28%' },
+    { icon: <Users size={20} />, label: 'Students', colorClass: 'students', ringClass: 'ring-node--students' },
+    { icon: <School size={20} />, label: 'Schools', colorClass: 'schools', ringClass: 'ring-node--schools' },
+    { icon: <BriefcaseBusiness size={20} />, label: 'Corporate', colorClass: 'corporate', ringClass: 'ring-node--corporate' },
   ];
 
   return (
     <div className="connection-container">
       <div className="connection-gradient" />
 
-      {/* Orbital rings */}
-      <motion.div
-        className="connection-ring-outer"
-        animate={{ rotate: 360 }}
-        transition={{ duration: 24, repeat: Infinity, ease: 'linear' }}
-      >
-        {/* Orbital particles */}
-        <div className="orbital-dot orbital-dot--1" />
-        <div className="orbital-dot orbital-dot--2" />
-      </motion.div>
-      <motion.div
-        className="connection-ring-inner"
-        animate={{ rotate: -360 }}
-        transition={{ duration: 18, repeat: Infinity, ease: 'linear' }}
-      >
-        <div className="orbital-dot orbital-dot--3" />
-      </motion.div>
-
-      {/* Central hub */}
-      <motion.div whileHover={{ scale: 1.05 }} className="connection-hub">
+      {/* Outer ring — centered anchor, ring rotates around hub center */}
+      <div className="connection-ring-outer-anchor">
         <motion.div
-          className="hub-icon"
-          animate={{ scale: [1, 1.06, 1] }}
-          transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut' }}
+          className="connection-ring-outer"
+          animate={{ rotate: 360 }}
+          transition={{ duration: ORBIT_DURATION, repeat: Infinity, ease: 'linear' }}
         >
-          <Network size={28} />
+          <div className="orbital-dot orbital-dot--1" />
+          <div className="orbital-dot orbital-dot--2" />
+
+          {/* 3 nodes on the ring at 0°, 120°, 240° */}
+          {nodes.map((node, i) => {
+            const angle = i * 120;
+            return (
+              <div
+                key={node.label}
+                className={`ring-node ${node.ringClass}`}
+                style={{ '--node-angle': `${angle}deg` } as React.CSSProperties}
+              >
+                <motion.div
+                  className="ring-node-inner"
+                  style={{ rotate: -angle }}
+                  animate={{ rotate: -angle - 360 }}
+                  transition={{ duration: ORBIT_DURATION, repeat: Infinity, ease: 'linear' }}
+                >
+                  <div className={`node-icon ${node.colorClass}`}>{node.icon}</div>
+                  <span className="node-label">{node.label}</span>
+                </motion.div>
+              </div>
+            );
+          })}
         </motion.div>
-        <p className="hub-label">Core intelligence</p>
-        <p className="hub-title">ESISA HUB</p>
-      </motion.div>
+      </div>
 
-      {/* Satellite nodes */}
-      {nodes.map((node, i) => (
+      {/* Inner ring — centered anchor, spins opposite direction */}
+      <div className="connection-ring-inner-anchor">
         <motion.div
-          key={node.label}
-          initial={{ opacity: 0, scale: 0.8 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true }}
-          transition={{ delay: i * 0.22 + 0.15, duration: 0.5 }}
-          className="connection-node"
-          style={{ left: `calc(50% + ${node.x})`, top: `calc(50% + ${node.y})` }}
+          className="connection-ring-inner"
+          animate={{ rotate: -360 }}
+          transition={{ duration: 18, repeat: Infinity, ease: 'linear' }}
         >
-          <motion.div className={`node-icon ${node.colorClass}`} whileHover={{ y: -6, scale: 1.08 }}>
-            {node.icon}
+          <div className="orbital-dot orbital-dot--3" />
+        </motion.div>
+      </div>
+
+      {/* Central hub — exact center anchor */}
+      <div className="connection-hub-anchor">
+        <motion.div whileHover={{ scale: 1.05 }} className="connection-hub">
+          <motion.div
+            className="hub-icon"
+            animate={{ scale: [1, 1.06, 1] }}
+            transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut' }}
+          >
+            <BrainCircuit size={28} />
           </motion.div>
-          <span className="node-label">{node.label}</span>
-
-          <svg className="connection-line-svg">
-            <motion.line
-              x1="0"
-              y1="0"
-              x2={node.x === '-26%' ? 60 : node.x === '26%' ? -60 : 0}
-              y2={node.y === '-26%' ? 50 : -55}
-              stroke={ESISA_COLORS.blue}
-              strokeWidth="1.5"
-              strokeDasharray="6 5"
-              animate={{ strokeDashoffset: [-16, 0] }}
-              transition={{ repeat: Infinity, duration: 1.2, ease: 'linear' }}
-            />
-          </svg>
+          <p className="hub-label">Core intelligence</p>
+          <p className="hub-title">ESISA AI</p>
         </motion.div>
-      ))}
+      </div>
     </div>
   );
 };
@@ -163,6 +162,25 @@ const ConnectionVisualization = () => {
 export default function EsisaPlatform() {
   const [loading, setLoading] = useState(true);
   const [scrolled, setScrolled] = useState(false);
+  const universityPartners = [
+    { name: 'ENSIIE', logo: 'ensiiie.png' },
+    { name: 'Polytech Marseille (Aix-Marseille Universite)', logo: 'polytech_marseille.png', zoom: 1.12 },
+    { name: "EiL Cote d'Opale (Ecole d'Ingenieurs du Littoral)", logo: 'eil_cote_dopale.png' },
+    { name: 'ISIMA (Institut Superieur d Informatique, de Modelisation et de leurs Applications)', logo: 'isima.png', zoom: 1.12 },
+    { name: 'Universite Lumiere Lyon 2', logo: 'uni_lumiere_lyon2.png' },
+    { name: 'Aix-Marseille Universite', logo: 'aix_marseille_uni.png', zoom: 1.1 },
+    { name: 'Universite de Lorraine', logo: 'université-lorraine.png', zoom: 1.2 },
+    { name: 'Universite Paris 8 (Vincennes-Saint-Denis)', logo: 'uni_paris8.png' },
+    { name: 'Universite de Bourgogne (uB)', logo: 'uni_bourgogne.png' },
+    { name: 'ULCO (Universite du Littoral Cote d Opale)', logo: 'ulco.png' },
+    { name: 'UCA (Universite Clermont Auvergne)', logo: 'uca_clermont.png', zoom: 1.12 },
+    { name: 'Universite Sorbonne Paris Nord', logo: 'uni_sorbonne_parisnord.png', zoom: 1.08 },
+    { name: 'Universite de Lille', logo: 'uni_lille.png', zoom: 1.12 },
+    { name: 'LIS (Laboratoire d Informatique & Systemes)', logo: 'lis_lab.png', zoom: 1.24 },
+    { name: 'Universite Cote d Azur', logo: 'uni_cote_dazur.png', zoom: 1.12 },
+    { name: 'INP Isima (Clermont Auvergne)', logo: 'inp_isima.png', zoom: 1.15 },
+    { name: 'Systemes Numeriques pour l Humain (SNH)', logo: 'snh_lab.png', zoom: 1.24 },
+  ];
   const [darkMode, setDarkMode] = useState<boolean>(() => {
     if (typeof window === 'undefined') return false;
     return window.localStorage.getItem('esisa-theme') === 'dark';
@@ -203,7 +221,7 @@ export default function EsisaPlatform() {
       </motion.div>
 
       {/* ==================== NAVIGATION ==================== */}
-      <Navbar scrolled={scrolled} darkMode={darkMode} setDarkMode={setDarkMode} />
+      {!loading && <Navbar scrolled={scrolled} darkMode={darkMode} setDarkMode={setDarkMode} />}
 
       {/* ==================== HERO SECTION ==================== */}
       <header className="hero-section">
@@ -459,6 +477,50 @@ export default function EsisaPlatform() {
           </button>
         </div>
       </section>
+
+      <div className="marquee-section marquee-section--universities">
+        <div className="marquee-label">Our Collaborating Universities</div>
+        <div className="marquee-track marquee-track--logos">
+          <div className="marquee-content">
+            {universityPartners.map((university, i) => (
+              <span key={`u-a-${i}`} className="marquee-item marquee-item--logo" title={university.name}>
+                <span
+                  className="partner-logo-box"
+                  aria-hidden="true"
+                  style={{ '--logo-zoom': `${university.zoom ?? 1}` } as React.CSSProperties}
+                >
+                  <img
+                    src={`/assets/${university.logo}`}
+                    alt={`${university.name} logo`}
+                    className="partner-logo"
+                    loading="lazy"
+                  />
+                </span>
+                <span className="partner-name">{university.name}</span>
+              </span>
+            ))}
+          </div>
+          <div className="marquee-content" aria-hidden="true">
+            {universityPartners.map((university, i) => (
+              <span key={`u-b-${i}`} className="marquee-item marquee-item--logo" title={university.name}>
+                <span
+                  className="partner-logo-box"
+                  aria-hidden="true"
+                  style={{ '--logo-zoom': `${university.zoom ?? 1}` } as React.CSSProperties}
+                >
+                  <img
+                    src={`/assets/${university.logo}`}
+                    alt=""
+                    className="partner-logo"
+                    loading="lazy"
+                  />
+                </span>
+                <span className="partner-name">{university.name}</span>
+              </span>
+            ))}
+          </div>
+        </div>
+      </div>
 
       <Footer />
     </div>
